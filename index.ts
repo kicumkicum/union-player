@@ -1,12 +1,15 @@
-const {YMApi} = require("ym-api");
-const S = require('stupid-player')
-const {login, password} = require('./config');
-const {createCLI} = require('./src/ui/cli/cli')
+import S from 'stupid-player';
+import {YMApi} from 'ym-api';
+import config from './config';
+import {createCLI} from './src/ui/cli/cli';
+import {Track} from "ym-api/dist/types";
+
+const {login, password} = config;
 
 const api = new YMApi();
 const p = new S();
 
-function shuffle(array) {
+function shuffle<T>(array: T[]): T[] {
   var currentIndex = array.length, temporaryValue, randomIndex;
 
   // While there remain elements to shuffle...
@@ -26,7 +29,7 @@ function shuffle(array) {
 }
 
 (async () => {
-  const work = async (track) => {
+  const work = async (track: Track): Promise<void> => {
     const t = await api.getTrackDownloadInfo(track.id);
     const k = await api.getTrackDirectLink(t[0].downloadInfoUrl)
 
@@ -45,7 +48,7 @@ function shuffle(array) {
 
   try {
     await api.init({username: login, password});
-    const t = await api.getPlaylist('3')
+    const t = await api.getPlaylist(3);
     const tracks = shuffle(t.tracks.slice());
 
     for (const {track} of tracks) {
