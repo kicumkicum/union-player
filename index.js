@@ -1,32 +1,10 @@
 const {YMApi} = require("ym-api");
 const S = require('stupid-player')
-const readline = require('readline');
-const {login, password} = require('config');
+const {login, password} = require('./config');
+const {createCLI} = require('./src/ui/cli/cli')
 
 const api = new YMApi();
 const p = new S();
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-rl.on('line', async (line) => {
-  console.log('line:', line)
-  switch (line) {
-    case 'p':
-      p.togglePause();
-      break;
-    case 's':
-    case 'n':
-      p.stop();
-      break;
-    case 'm':
-      const volume = p.getVolume()
-      await p.setVolume(volume > 0 ? 0 : 100);
-      break;
-  }
-});
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -59,9 +37,11 @@ function shuffle(array) {
     console.log(`play: ${track.artists[0].name} - ${track.title} > ${track.albums[0].title}`)
 
     await new Promise((resolve) => {
-      p.on(p.EVENT_STOP, resolve)
+      p.once(p.EVENT_STOP, resolve)
     });
   }
+
+  createCLI(p);
 
   try {
     await api.init({username: login, password});
