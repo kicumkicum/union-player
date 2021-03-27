@@ -3,11 +3,25 @@ import {YMApi} from 'ym-api';
 import config from './config';
 import {createCLI} from './src/ui/cli/cli';
 import {Track} from "ym-api/dist/types";
+import store from './src/state/store';
+import { setActiveTrack } from './src/state/playlist-slice';
 
 const {login, password} = config;
 
 const api = new YMApi();
 const p = new S();
+
+store.subscribe(() => {
+  console.log(store.getState());
+});
+let val = 1
+
+const _setActiveTrack = (v: number) => {
+  store.dispatch(setActiveTrack(v))
+}
+setInterval(() => {
+  // _setActiveTrack(val++);
+}, 3000);
 
 function shuffle<T>(array: T[]): T[] {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -36,7 +50,7 @@ function shuffle<T>(array: T[]): T[] {
     await p.play(k)
     await p.setVolume(100)
 
-    console.log('play', track)
+    // console.log('play', track)
     console.log(`play: ${track.artists[0].name} - ${track.title} > ${track.albums[0].title}`)
 
     await new Promise((resolve) => {
