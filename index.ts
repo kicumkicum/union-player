@@ -50,14 +50,16 @@ function shuffle<T>(array: T[]): T[] {
     await p.play(k)
     await p.setVolume(100)
 
-    // console.log('play', track)
+    console.log('play', k)
     console.log(`play: ${track.artists[0].name} - ${track.title} > ${track.albums[0].title}`)
 
     await new Promise((resolve) => {
+      // @ts-ignore
       p.once(p.EVENT_STOP, resolve)
     });
   }
 
+  // @ts-ignore
   createCLI(p);
 
   try {

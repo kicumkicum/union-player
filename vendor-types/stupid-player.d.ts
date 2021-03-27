@@ -1,8 +1,10 @@
 declare module 'stupid-player' {
     /// <reference types="node" />
+    // @ts-ignore
     import EventEmitter from "events";
     import {IStupidPlayer, State} from "i-stupid-player";
-    export default class StupidPlayer extends EventEmitter implements IStupidPlayer {
+    export default // @ts-ignore
+    class StupidPlayer extends EventEmitter implements IStupidPlayer {
         private decoder;
         private mpg123Util;
         private offset;
