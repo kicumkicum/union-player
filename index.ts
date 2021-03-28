@@ -1,4 +1,5 @@
-import S from 'stupid-player';
+import * as S from 'stupid-player';
+console.log(1111, S)
 import {YMApi} from 'ym-api';
 import config from './config';
 import {createCLI} from './src/ui/cli/cli';
@@ -9,8 +10,9 @@ import { setActiveTrack } from './src/state/playlist-slice';
 const {login, password} = config;
 
 const api = new YMApi();
-const p = new S();
-
+// @ts-ignore
+const p = new S.StupidPlayer();
+console.log(222, p)
 store.subscribe(() => {
   console.log(store.getState());
 });

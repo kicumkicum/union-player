@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "1.5.1",
-    "stupid-player": "git://github.com/kicumkicum/stupid-player.git#master",
+    "stupid-player": "0.3.4",
     "ym-api": "1.0.0"
   },
   "devDependencies": {
