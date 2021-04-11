@@ -15,6 +15,9 @@
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "1.5.1",
+    "range-stream": "1.1.0",
+    "readable-stream-clone": "0.0.7",
+    "stdio": "2.1.1",
     "stupid-player": "0.3.4",
     "ym-api": "1.0.0"
   },

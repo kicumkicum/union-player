@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {isBoolean} from "util";
 
 export const playlistSlice = createSlice({
   name: 'playlist',
@@ -13,7 +14,7 @@ export const playlistSlice = createSlice({
     ],
   },
   reducers: {
-    setActiveTrack(state, action) {
+    setActiveTrack(state, action: {type: string, payload: number}) {
       state.activeTrack = action.payload;
     },
     addTrack(track, position) {
