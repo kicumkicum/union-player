@@ -1,42 +1,45 @@
-// import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-// import {State} from "stupid-player";
-// // import player from '../../index';
-//
-// const pause = createAsyncThunk(
-//   'users/fetchByIdStatus',
-//   async () => {
-//     await player.pause();
-//
-//     return State.PAUSE;
-//   }
-// );
-//
-// export const playerSlice = createSlice({
-//     name: 'player',
-//     initialState: {
-//         state: State.STOP,
-//         volume: 100,
-//         isMuted: false,
-//         uri: '',
-//     },
-//     reducers: {
-//         setState(state, action) {
-//             state.state = action.payload;
-//         },
-//         setVolume(track, position) {
-//         },
-//         removeTrack(track) {
-//         },
-//     },
-//     extraReducers: {
-//         // Add reducers for additional action types here, and handle loading state as needed
-//         [pause.fulfilled as unknown as string]: (state, action) => {
-//             state.state = action.payload;
-//         }
-//     }
-// });
-//
-// //@ts-ignore
-// export const {addTrack, removeTrack, setActiveTrack} = playerSlice.actions;
-//
-// export default playerSlice.reducer;
+import {createSlice} from '@reduxjs/toolkit';
+import {State} from 'stupid-player';
+import {createPlayerThunkWrapper} from './player-thunk-wrapper';
+import {getPlayer} from '../player';
+
+const player = getPlayer();
+
+const {togglePause, stop, play} = createPlayerThunkWrapper(player);
+
+export const playerSlice = createSlice({
+    name: 'player',
+    initialState: {
+        state: State.STOP,
+        volume: 100,
+        isMuted: false,
+        uri: '',
+    },
+    reducers: {},
+    extraReducers: {
+        // @ts-ignore
+        [togglePause.fulfilled as unknown as string]: (state, action) => {
+            state.state = action.payload;
+        },
+
+        // @ts-ignore
+        [stop.fulfilled as unknown as string]: (state, action) => {
+            state.state = action.payload;
+        },
+
+        // @ts-ignore
+        [play.fulfilled as unknown as string]: (state, action) => {
+            const {uri, state: playerState} = action.payload;
+
+            state.state = playerState;
+            state.uri = uri;
+        },
+
+    }
+});
+
+const r = playerSlice.reducer;
+//@ts-ignore
+export {togglePause, r}
+
+export default {togglePause, stop, play};

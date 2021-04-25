@@ -1,5 +1,6 @@
-import {setActiveTrack} from "../../state/playlist-slice.api";
-import {StupidPlayer} from "stupid-player";
+import {StupidPlayer} from 'stupid-player';
+import {togglePause, play} from '../../state/player-slice.api';
+import {setActiveNext} from '../../state/playlist-slice';
 
 enum Command {
     PLAY = 'play',
@@ -19,7 +20,7 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.PAUSE]: ['pause'],
     [Command.PLAY]: ['play'],
     [Command.PREV_TRACK]: [],
-    [Command.TOGGLE_MUTE]: [],
+    [Command.TOGGLE_MUTE]: ['m'],
     [Command.SHOW_PLAYLISTS]: [],
     [Command.SELECT_PLAYLIST]: [],
     [Command.EXIT]: ['q'],
@@ -72,19 +73,13 @@ const CommandAlias: Record<Command, string[]> = {
 //     }
 // }
 
-export const createCommands = (player: StupidPlayer) => {
+export const createCommands = (player: StupidPlayer, dispatch: any) => {
     const commandCallback = {
-        [Command.NEXT_TRACK]: async () => {
-            console.log('next-track')
-            await player.stop();
-            setActiveTrack(Math.random());
-        },
-        [Command.TOGGLE_PLAY]: async () => await player.togglePause(),
+        [Command.NEXT_TRACK]: async () => dispatch(setActiveNext()),
+        [Command.TOGGLE_PLAY]: async () => togglePause(),
         [Command.PAUSE]: async () => await player.pause(),
-        [Command.PLAY]: async (url: string) => {
-            const stream = await StupidPlayer.getReadStream(url);
-            await player.play(stream);
-        },
+            // @ts-ignore
+        [Command.PLAY]: async (url: string) => play(url),
         [Command.PREV_TRACK]: async (): Promise<null> => null,
         [Command.TOGGLE_MUTE]: async () => await player.setVolume(0),
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,

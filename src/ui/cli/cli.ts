@@ -1,11 +1,26 @@
 import * as readline from 'readline';
-import {StupidPlayer} from "stupid-player";
-import {Store} from "../../state/store";
-import {Interface} from "readline";
-import {createCommands} from "./commands";
+import {StupidPlayer} from 'stupid-player';
+import {State, Store} from '../../state/store';
+import {Interface} from 'readline';
+import {createCommands} from './commands';
+import {notReact} from '../../utils/not-react';
+
+const {useEffect} = notReact;
 
 const createCLI = (player: StupidPlayer, store: Store): void => {
     new CLI(player, store);
+};
+
+const render = (state: State) => {
+    // useEffect(() => {
+    //     console.log('Last command: ', state.player.lastCommand)
+    // }, [state.player.lastCommand], 4);
+
+    useEffect(() => {
+        const {track} = state.playlist.activeTrack;
+
+        console.log(`Play: ${track.artists[0].name} - ${track.title} > ${track.albums[0].title}`)
+    }, [state.playlist.activeTrack], 3);
 };
 
 const CLI = class {
@@ -18,21 +33,22 @@ const CLI = class {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onReadLine = this.onReadLine.bind(this);
 
-        store.subscribe(() => {
-            console.log(store.getState().playlist.tracks);
-        });
-
         this.rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout,
           });
 
-        this.getExecCommand = createCommands(player);
+        this.getExecCommand = createCommands(player, store.dispatch);
 
         // readline.emitKeypressEvents(process.stdin);
         // process.stdin.setRawMode(true);
 
         this.handleKey();
+
+        store.subscribe(() => {
+            //@ts-ignore
+            render(store.getState());
+        });
     }
 
     private getExecCommand(command: string): (...args: any[]) => Promise<void> {
@@ -51,9 +67,9 @@ const CLI = class {
             process.stdout.clearLine(-1);
             process.stdout.moveCursor(-1, 0);
 
-            await callback(value);
-
             console.log('Command: ', command);
+
+            await callback(value);
         }
 
         this.unHandleLine();
@@ -79,9 +95,9 @@ const CLI = class {
         const callback = this.getExecCommand(command);
 
         if (callback) {
-            await callback();
-
             console.log('Command: ', command);
+
+            await callback();
 
             return;
         }
@@ -135,16 +151,5 @@ export {
   createCLI,
 };
 
-
-const connect = (state: any) => {
-    return {
-        [state.playlist.tracks]: () => {
-            console.log('Change tracks', state.playlist.tracks)
-        }
-    }
-};
-
-// import fs from 'fs';
-// //@ts-ignore
-// import rangeStream from "range-stream";
-// import ReadableStreamClone from "readable-stream-clone";
+// import rangeStream from 'range-stream';
+// import ReadableStreamClone from 'readable-stream-clone';
