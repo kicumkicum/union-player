@@ -5,7 +5,7 @@ import {getPlayer} from '../player';
 
 const player = getPlayer();
 
-const {togglePause, stop, play} = createPlayerThunkWrapper(player);
+const {togglePause, stop, play, toggleMute} = createPlayerThunkWrapper(player);
 
 export const playerSlice = createSlice({
     name: 'player',
@@ -20,6 +20,11 @@ export const playerSlice = createSlice({
         // @ts-ignore
         [togglePause.fulfilled as unknown as string]: (state, action) => {
             state.state = action.payload;
+        },
+
+        // @ts-ignore
+        [toggleMute.fulfilled as unknown as string]: (state, action) => {
+            state.isMuted = action.payload;
         },
 
         // @ts-ignore
@@ -42,4 +47,4 @@ const r = playerSlice.reducer;
 //@ts-ignore
 export {togglePause, r}
 
-export default {togglePause, stop, play};
+export default {togglePause, stop, play, toggleMute};

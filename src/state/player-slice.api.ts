@@ -22,4 +22,4 @@ Object.keys(p).forEach((key: keyof typeof p) => {
 });
 
 
-export const {togglePause, stop, play} = k;
+export const {togglePause, stop, play, toggleMute} = k;

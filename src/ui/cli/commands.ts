@@ -1,5 +1,5 @@
 import {StupidPlayer} from 'stupid-player';
-import {togglePause, play} from '../../state/player-slice.api';
+import {togglePause, play, toggleMute} from '../../state/player-slice.api';
 import {setActiveNext} from '../../state/playlist-slice';
 
 enum Command {
@@ -81,7 +81,7 @@ export const createCommands = (player: StupidPlayer, dispatch: any) => {
             // @ts-ignore
         [Command.PLAY]: async (url: string) => play(url),
         [Command.PREV_TRACK]: async (): Promise<null> => null,
-        [Command.TOGGLE_MUTE]: async () => await player.setVolume(0),
+        [Command.TOGGLE_MUTE]: async () => toggleMute(),
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,
         [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,
         [Command.EXIT]: async () => process.exit(0),
