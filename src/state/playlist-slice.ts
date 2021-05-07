@@ -32,6 +32,17 @@ export const playlistSlice = createSlice({
 
             state.activeTrack = tracks[index];
         },
+
+        setActivePrev(state) {
+            const {tracks} = state;
+            let index = tracks.findIndex((it) => it.track.id === state.activeTrack.track.id) - 1;
+
+            if (index < 0) {
+                index = tracks.length - 1;
+            }
+
+            state.activeTrack = tracks[index];
+        },
     },
     extraReducers: {
         [loadPlaylist.fulfilled as unknown as string]: (state, action) => {
@@ -49,7 +60,7 @@ export const playlistSlice = createSlice({
     },
 });
 
-export const {setActiveTrack, setActiveNext} = playlistSlice.actions;
+export const {setActiveTrack, setActiveNext, setActivePrev} = playlistSlice.actions;
 
 export const reducer = playlistSlice.reducer;
 

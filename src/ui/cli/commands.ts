@@ -1,6 +1,6 @@
 import {StupidPlayer} from 'stupid-player';
 import {togglePause, play, toggleMute} from '../../state/player-slice.api';
-import {setActiveNext} from '../../state/playlist-slice';
+import {setActiveNext, setActivePrev} from '../../state/playlist-slice';
 
 enum Command {
     PLAY = 'play',
@@ -19,7 +19,7 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.TOGGLE_PLAY]: ['p'],
     [Command.PAUSE]: ['pause'],
     [Command.PLAY]: ['play'],
-    [Command.PREV_TRACK]: [],
+    [Command.PREV_TRACK]: ['prev', 'r'],
     [Command.TOGGLE_MUTE]: ['m'],
     [Command.SHOW_PLAYLISTS]: [],
     [Command.SELECT_PLAYLIST]: [],
@@ -76,17 +76,17 @@ const CommandAlias: Record<Command, string[]> = {
 export const createCommands = (player: StupidPlayer, dispatch: any) => {
     const commandCallback = {
         [Command.NEXT_TRACK]: async () => dispatch(setActiveNext()),
+        [Command.PREV_TRACK]: async () => dispatch(setActivePrev()),
         [Command.TOGGLE_PLAY]: async () => togglePause(),
         [Command.PAUSE]: async () => await player.pause(),
             // @ts-ignore
         [Command.PLAY]: async (url: string) => play(url),
-        [Command.PREV_TRACK]: async (): Promise<null> => null,
         [Command.TOGGLE_MUTE]: async () => toggleMute(),
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,
         [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,
         [Command.EXIT]: async () => process.exit(0),
     };
-    
+
     const getExecCommand = (command: string): (...args: any[]) => Promise<void> => {
         const command_ = Object.keys(CommandAlias).find((key) => {
             return CommandAlias[key as Command].some((alias) => alias === command);
@@ -94,7 +94,7 @@ export const createCommands = (player: StupidPlayer, dispatch: any) => {
 
         return commandCallback[command_];
     };
-    
+
     return getExecCommand;
 };
 
