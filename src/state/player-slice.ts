@@ -39,7 +39,6 @@ export const playerSlice = createSlice({
             state.state = playerState;
             state.uri = uri;
         },
-
     }
 });
 

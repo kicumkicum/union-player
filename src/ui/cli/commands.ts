@@ -1,8 +1,10 @@
 import {StupidPlayer} from 'stupid-player';
 import {togglePause, play, toggleMute} from '../../state/player-slice.api';
-import {setActiveNext, setActivePrev} from '../../state/playlist-slice';
+import ps, {setActiveNext, setActivePrev} from '../../state/playlist-slice';
 
-enum Command {
+const {loadPopularTracksByArtist} = ps;
+
+export enum Command {
     PLAY = 'play',
     PAUSE = 'pause',
     TOGGLE_PLAY = 'toggle-play',
@@ -12,6 +14,7 @@ enum Command {
     SELECT_PLAYLIST = 'select-playlist',
     SHOW_PLAYLISTS = 'show-playlists',
     EXIT = 'exit',
+    PLAY_POPULAR = 'play-popular',
 }
 
 const CommandAlias: Record<Command, string[]> = {
@@ -19,11 +22,12 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.TOGGLE_PLAY]: ['p'],
     [Command.PAUSE]: ['pause'],
     [Command.PLAY]: ['play'],
-    [Command.PREV_TRACK]: ['prev', 'r'],
+    [Command.PREV_TRACK]: ['r'],
     [Command.TOGGLE_MUTE]: ['m'],
     [Command.SHOW_PLAYLISTS]: [],
     [Command.SELECT_PLAYLIST]: [],
     [Command.EXIT]: ['q'],
+    [Command.PLAY_POPULAR]: ['o']
 };
 
 // const commander = () => {};
@@ -78,21 +82,22 @@ export const createCommands = (player: StupidPlayer, dispatch: any) => {
         [Command.NEXT_TRACK]: async () => dispatch(setActiveNext()),
         [Command.PREV_TRACK]: async () => dispatch(setActivePrev()),
         [Command.TOGGLE_PLAY]: async () => togglePause(),
-        [Command.PAUSE]: async () => await player.pause(),
+        [Command.PAUSE]: async () => togglePause(),
             // @ts-ignore
         [Command.PLAY]: async (url: string) => play(url),
         [Command.TOGGLE_MUTE]: async () => toggleMute(),
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,
         [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,
         [Command.EXIT]: async () => process.exit(0),
+        [Command.PLAY_POPULAR]: () => dispatch(loadPopularTracksByArtist()),
     };
 
-    const getExecCommand = (command: string): (...args: any[]) => Promise<void> => {
+    const getExecCommand = (command: string): [Command, (...args: any[]) => Promise<void>] => {
         const command_ = Object.keys(CommandAlias).find((key) => {
             return CommandAlias[key as Command].some((alias) => alias === command);
         }) as Command;
 
-        return commandCallback[command_];
+        return [command_, commandCallback[command_]];
     };
 
     return getExecCommand;

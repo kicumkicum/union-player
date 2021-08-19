@@ -6,7 +6,7 @@ import {Track} from 'ym-api/dist/types';
 
 const api = new YMApi();
 
-const {loadPlaylist, loadTrackUrl, auth} = createPlaylistLogic(api, config);
+const {loadPlaylist, loadTrackUrl, auth, loadPopularTracksByArtist} = createPlaylistLogic(api, config);
 
 export const playlistSlice = createSlice({
     name: 'PLAYLIST',
@@ -45,15 +45,22 @@ export const playlistSlice = createSlice({
         },
     },
     extraReducers: {
+        //@ts-ignore
         [loadPlaylist.fulfilled as unknown as string]: (state, action) => {
             state.tracks = action.payload;
         },
+      //@ts-ignore
+      [loadPopularTracksByArtist.fulfilled as unknown as string]: (state, action) => {
+          state.tracks = action.payload;
+      },
 
-        [loadTrackUrl.fulfilled as unknown as string]: (state, action) => {
+     //@ts-ignore
+     [loadTrackUrl.fulfilled as unknown as string]: (state, action) => {
             state.activeUrl = action.payload;
         },
 
-        [auth.fulfilled as unknown as string]: (state, action) => {
+      //@ts-ignore
+      [auth.fulfilled as unknown as string]: (state, action) => {
             const {access_token} = action.payload;
             state.token = access_token;
         },
@@ -65,7 +72,12 @@ export const {setActiveTrack, setActiveNext, setActivePrev} = playlistSlice.acti
 export const reducer = playlistSlice.reducer;
 
 export default {
+    //@ts-ignore
     loadPlaylist,
+    //@ts-ignore
     loadTrackUrl,
+    //@ts-ignore
     auth,
+    //@ts-ignore
+    loadPopularTracksByArtist,
 };

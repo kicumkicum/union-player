@@ -17,6 +17,18 @@ export const createPlaylistLogic = (api: YMApi, config: any) => {
         }
     );
 
+    const loadPopularTracksByArtist = createAsyncThunk(
+        'loadPopularTracksByArtist',
+        async (_, thunkApi) => {
+            // @ts-ignore
+            const artistId = thunkApi.getState().playlist.activeTrack.track.artists[0].id;
+            const artist = await api.getArtist(artistId);
+
+            //@ts-ignore
+            return shuffle(artist.popularTracks.map(it => ({track: it})));
+        }
+    );
+
     const loadTrackUrl = createAsyncThunk(
         'loadTrackUrl',
         async (track: Track) => {
@@ -35,5 +47,5 @@ export const createPlaylistLogic = (api: YMApi, config: any) => {
         }
     );
 
-    return {loadPlaylist, loadTrackUrl, auth};
+    return {loadPlaylist, loadTrackUrl, auth, loadPopularTracksByArtist};
 };

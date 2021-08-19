@@ -2,7 +2,7 @@ import * as readline from 'readline';
 import {StupidPlayer} from 'stupid-player';
 import {State, Store} from '../../state/store';
 import {Interface} from 'readline';
-import {createCommands} from './commands';
+import {Command, createCommands} from './commands';
 import {notReact} from '../../utils/not-react';
 
 const {useEffect} = notReact;
@@ -51,8 +51,8 @@ const CLI = class {
         });
     }
 
-    private getExecCommand(command: string): (...args: any[]) => Promise<void> {
-        return () => Promise.resolve();
+    private getExecCommand(command: string): [Command, (...args: any[]) => Promise<void>] {
+        return [Command.PLAY_POPULAR, () => Promise.resolve()];
     }
 
     private async onReadLine(line: string): Promise<void> {
@@ -61,13 +61,13 @@ const CLI = class {
         console.log('command:', command)
         console.log('value:', value)
 
-        const callback = this.getExecCommand(command);
+        const [type, callback] = this.getExecCommand(command);
 
         if (callback) {
             process.stdout.clearLine(-1);
             process.stdout.moveCursor(-1, 0);
 
-            console.log('Command: ', command);
+            console.log('Command:', type);
 
             await callback(value);
         }
@@ -92,10 +92,10 @@ const CLI = class {
         process.stdout.clearLine(-1);
         process.stdout.moveCursor(-1, 1);
 
-        const callback = this.getExecCommand(command);
+        const [type, callback] = this.getExecCommand(command);
 
         if (callback) {
-            console.log('Command: ', command);
+            console.log('Command:', type);
 
             await callback();
 
