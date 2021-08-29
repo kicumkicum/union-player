@@ -1,12 +1,33 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {createPlaylistLogic} from './playlist.logic';
-import {YMApi} from 'ym-api';
-import config from '../../config';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {Track} from 'ym-api/dist/types';
+import {State} from './store';
+import {
+    auth as auth_,
+    loadPopularTracksByArtist as loadPopularTracksByArtist_,
+    loadTrackUrl as loadTrackUrl_,
+    loadPlaylist as loadPlaylist_
+} from '../use-cases/playlist';
 
-const api = new YMApi();
+const selectArtist = (state: State) => {
+    return state.playlist.activeTrack.track.artists[0];
+};
 
-const {loadPlaylist, loadTrackUrl, auth, loadPopularTracksByArtist} = createPlaylistLogic(api, config);
+const createPlaylistLogic = (): any => {
+    return {
+        loadPlaylist: createAsyncThunk('loadTracks', loadPlaylist_),
+        loadTrackUrl: createAsyncThunk('loadTrackUrl', loadTrackUrl_),
+        auth: createAsyncThunk('auth', auth_),
+        loadPopularTracksByArtist: createAsyncThunk(
+          'loadPopularTracksByArtist',
+          async (_, thunkApi) => {
+              const artist = selectArtist(thunkApi.getState() as State);
+              return loadPopularTracksByArtist_(artist.id);
+          }
+        ),
+    };
+};
+
+const {loadPlaylist, loadTrackUrl, auth, loadPopularTracksByArtist} = createPlaylistLogic();
 
 export const playlistSlice = createSlice({
     name: 'PLAYLIST',

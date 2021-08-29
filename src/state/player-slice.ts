@@ -1,9 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {State} from 'stupid-player';
 import {createPlayerThunkWrapper} from './player-thunk-wrapper';
-import {getPlayer} from '../player';
-
-const player = getPlayer();
+import {player} from '../singletone';
 
 const {togglePause, stop, play, toggleMute} = createPlayerThunkWrapper(player);
 
