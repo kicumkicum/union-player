@@ -2,7 +2,7 @@ import {StupidPlayer} from 'stupid-player';
 import {togglePause, play, toggleMute} from '../../state/player-slice.api';
 import ps, {setActiveNext, setActivePrev} from '../../state/playlist-slice';
 
-const {loadPopularTracksByArtist} = ps;
+const {loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists} = ps;
 
 export enum Command {
     PLAY = 'play',
@@ -14,7 +14,8 @@ export enum Command {
     SELECT_PLAYLIST = 'select-playlist',
     SHOW_PLAYLISTS = 'show-playlists',
     EXIT = 'exit',
-    PLAY_POPULAR = 'play-popular',
+    PLAY_POPULAR = 'play-popular-by-artist',
+    PLAY_ARTIST = 'play-artist',
 }
 
 const CommandAlias: Record<Command, string[]> = {
@@ -27,7 +28,8 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.SHOW_PLAYLISTS]: [],
     [Command.SELECT_PLAYLIST]: [],
     [Command.EXIT]: ['q'],
-    [Command.PLAY_POPULAR]: ['o']
+    [Command.PLAY_POPULAR]: ['o'],
+    [Command.PLAY_ARTIST]: ['play-artist', 'pa'],
 };
 
 // const commander = () => {};
@@ -90,6 +92,9 @@ export const createCommands = (player: StupidPlayer, dispatch: any) => {
         [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,
         [Command.EXIT]: async () => process.exit(0),
         [Command.PLAY_POPULAR]: () => dispatch(loadPopularTracksByArtist()),
+        [Command.PLAY_ARTIST]: (artist: string) => {
+            return dispatch(loadTracksByArtists([artist]))
+        },
     };
 
     const getExecCommand = (command: string): [Command, (...args: any[]) => Promise<void>] => {

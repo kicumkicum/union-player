@@ -1,5 +1,5 @@
 import {shuffle} from "../utils/array";
-import {Track} from "ym-api/dist/types";
+import {Album, Track} from "ym-api/dist/types";
 import config from "../../config";
 import {ymApi} from "../singletone";
 
@@ -32,9 +32,37 @@ const auth = async () => {
     return await ymApi.init({username: login, password, access_token: token});
 };
 
+const loadTracksByAlbum = async (album: Album) => {
+  const a = await ymApi.getAlbumWithTracks(album.id);
+  return a.volumes[0];
+};
+
+const loadTracksByArtist = async (artist: string): Promise<{track: Track}[]> => {
+  const response = await ymApi.searchArtists(encodeURIComponent(artist));
+  const artist_ = response?.artists.results.find((it) => it.name.toLocaleLowerCase() === artist.toLowerCase());
+
+  if (!artist_) {
+    return [];
+  }
+
+  const {albums} = await ymApi.getArtist(artist_.id);
+
+  const tracks = await Promise.all(albums.map(loadTracksByAlbum));
+
+  return [].concat(...tracks).map(it => ({track: it}));
+};
+
+const loadTracksByArtists = async (artists: string[]) => {
+  const tracks = await Promise.all(artists.map(loadTracksByArtist));
+
+  return shuffle([].concat(...tracks));
+};
+
 export {
   loadPlaylist,
   loadPopularTracksByArtist,
+  loadTracksByArtist,
+  loadTracksByArtists,
   loadTrackUrl,
   auth,
 }

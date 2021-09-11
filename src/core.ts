@@ -5,7 +5,7 @@ import {play, stop} from './state/player-slice.api';
 import p from './state/playlist-slice';
 import {setActiveTrack, setActiveNext} from './state/playlist-slice';
 
-const {loadTrackUrl, loadPlaylist, auth} = p;
+const {loadTrackUrl, loadPlaylist, auth, loadTracksByArtists} = p;
 
 const {useEffect} = notReact;
 
@@ -14,7 +14,8 @@ export const createCore = (player: StupidPlayer, store: Store) => {
         const state = store.getState();
 
         useEffect(() => {
-            store.dispatch(loadPlaylist());
+            // store.dispatch(setActivePlaylist(0));
+            store.dispatch(loadTracksByArtists(['жщ']));
         }, [state.playlist.token], 0);
 
         useEffect(() => {
@@ -35,7 +36,7 @@ export const createCore = (player: StupidPlayer, store: Store) => {
         }, [state.playlist.activeTrack], 2);
     });
 
-    player.on(player.EVENT_STOP, async () => {
+    player.on(player.EVENT_STOP, () => {
         store.dispatch(setActiveNext());
     });
 

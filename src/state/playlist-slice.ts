@@ -4,6 +4,7 @@ import {State} from './store';
 import {
     auth as auth_,
     loadPopularTracksByArtist as loadPopularTracksByArtist_,
+    loadTracksByArtists as loadTracksByArtists_,
     loadTrackUrl as loadTrackUrl_,
     loadPlaylist as loadPlaylist_
 } from '../use-cases/playlist';
@@ -15,6 +16,7 @@ const selectArtist = (state: State) => {
 const createPlaylistLogic = (): any => {
     return {
         loadPlaylist: createAsyncThunk('loadTracks', loadPlaylist_),
+        loadTracksByArtists: createAsyncThunk('loadTracksByArtists', loadTracksByArtists_),
         loadTrackUrl: createAsyncThunk('loadTrackUrl', loadTrackUrl_),
         auth: createAsyncThunk('auth', auth_),
         loadPopularTracksByArtist: createAsyncThunk(
@@ -27,7 +29,7 @@ const createPlaylistLogic = (): any => {
     };
 };
 
-const {loadPlaylist, loadTrackUrl, auth, loadPopularTracksByArtist} = createPlaylistLogic();
+const {loadPlaylist, loadTrackUrl, auth, loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists} = createPlaylistLogic();
 
 export const playlistSlice = createSlice({
     name: 'PLAYLIST',
@@ -70,6 +72,11 @@ export const playlistSlice = createSlice({
         [loadPlaylist.fulfilled as unknown as string]: (state, action) => {
             state.tracks = action.payload;
         },
+        //@ts-ignore
+        [loadTracksByArtists.fulfilled as unknown as string]: (state, action) => {
+            state.tracks = action.payload;
+        },
+
       //@ts-ignore
       [loadPopularTracksByArtist.fulfilled as unknown as string]: (state, action) => {
           state.tracks = action.payload;
@@ -79,6 +86,9 @@ export const playlistSlice = createSlice({
      [loadTrackUrl.fulfilled as unknown as string]: (state, action) => {
             state.activeUrl = action.payload;
         },
+    [loadTrackUrl.rejected as unknown as string]: (state, action) => {
+                console.log('Error:', action);
+            },
 
       //@ts-ignore
       [auth.fulfilled as unknown as string]: (state, action) => {
@@ -93,6 +103,8 @@ export const {setActiveTrack, setActiveNext, setActivePrev} = playlistSlice.acti
 export const reducer = playlistSlice.reducer;
 
 export default {
+    //@ts-ignore
+    loadTracksByArtists,
     //@ts-ignore
     loadPlaylist,
     //@ts-ignore
