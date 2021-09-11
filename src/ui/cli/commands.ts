@@ -19,15 +19,15 @@ export enum Command {
 }
 
 const CommandAlias: Record<Command, string[]> = {
-    [Command.NEXT_TRACK]: ['next', 'n'],
-    [Command.TOGGLE_PLAY]: ['p'],
+    [Command.NEXT_TRACK]: ['n', 'return', 'next'],
+    [Command.TOGGLE_PLAY]: ['p', 'toggle-play', 'toggle-pause', 'space'],
     [Command.PAUSE]: ['pause'],
     [Command.PLAY]: ['play'],
-    [Command.PREV_TRACK]: ['r'],
-    [Command.TOGGLE_MUTE]: ['m'],
+    [Command.PREV_TRACK]: ['r', 'prev'],
+    [Command.TOGGLE_MUTE]: ['m', 'mute', 'unmute', 'toggle-mute'],
     [Command.SHOW_PLAYLISTS]: [],
     [Command.SELECT_PLAYLIST]: [],
-    [Command.EXIT]: ['q'],
+    [Command.EXIT]: ['q', 'exit', 'quit'],
     [Command.PLAY_POPULAR]: ['o'],
     [Command.PLAY_ARTIST]: ['play-artist', 'pa'],
 };
