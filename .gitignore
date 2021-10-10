@@ -1,4 +1,5 @@
 .idea/
 dist/
 node_modules/
+src/__prototypes__
 config.ts

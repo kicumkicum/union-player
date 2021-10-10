@@ -36,6 +36,10 @@ const stop = async () => {
 };
 
 const setVolume = async (value: number) => {
+  // TODO: Remove that checking.
+  // Workaround. Wait fix https://github.com/kicumkicum/stupid-player/issues/68
+  value = Math.max(0, Math.min(100, value));
+
   await player.setVolume(value);
 
   return player.getVolume();

@@ -1,0 +1,16 @@
+import {locales} from './locale';
+
+export const config = {
+    login: '',
+    password: '',
+    token: '',
+    locales: [locales.EN, locales.RU],
+    locale: {
+        main: locales.EN,
+        extra: [locales.RU],
+    }
+};
+
+type Config = typeof config;
+
+export default config;

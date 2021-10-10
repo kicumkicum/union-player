@@ -95,6 +95,7 @@ const CLI = class {
         const [type, callback] = this.getExecCommand(command);
 
         if (callback) {
+            // TODO: Move to render
             console.log('Command:', type);
 
             await callback();
@@ -102,6 +103,7 @@ const CLI = class {
             return;
         }
 
+        // TODO: Move to render
         console.log('Unhandle key:', command);
 
         switch (command) {

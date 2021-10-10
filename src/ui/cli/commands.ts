@@ -1,6 +1,7 @@
 import {StupidPlayer} from 'stupid-player';
-import {togglePause, play, toggleMute} from '../../state/player-slice.api';
+import {togglePause, play, toggleMute, setVolume} from '../../state/player-slice.api';
 import ps, {setActiveNext, setActivePrev} from '../../state/playlist-slice';
+import {selectVolume} from '../../state/player-selectors';
 
 const {loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists} = ps;
 
@@ -16,6 +17,8 @@ export enum Command {
     EXIT = 'exit',
     PLAY_POPULAR = 'play-popular-by-artist',
     PLAY_ARTIST = 'play-artist',
+    VOLUME_INC = 'volume-inc',
+    VOLUME_DEC = 'volume-dec',
 }
 
 const CommandAlias: Record<Command, string[]> = {
@@ -30,6 +33,8 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.EXIT]: ['q', 'exit', 'quit'],
     [Command.PLAY_POPULAR]: ['o'],
     [Command.PLAY_ARTIST]: ['play-artist', 'pa'],
+    [Command.VOLUME_INC]: ['volume-up', 'up'],
+    [Command.VOLUME_DEC]: ['volume-down', 'down'],
 };
 
 // const commander = () => {};
@@ -88,6 +93,15 @@ export const createCommands = (player: StupidPlayer, dispatch: any) => {
             // @ts-ignore
         [Command.PLAY]: async (url: string) => play(url),
         [Command.TOGGLE_MUTE]: async () => toggleMute(),
+        [Command.VOLUME_INC]: async () => {
+            const volume = selectVolume();
+            setVolume(volume + 10);
+        },
+        [Command.VOLUME_DEC]: async () => {
+            const volume = selectVolume();
+            console.log('volume-dec', volume);
+            setVolume(volume - 10);
+        },
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,
         [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,
         [Command.EXIT]: async () => process.exit(0),

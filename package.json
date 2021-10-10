@@ -20,7 +20,7 @@
     "readable-stream-clone": "0.0.7",
     "remote-redux-devtools": "^0.5.16",
     "stdio": "2.1.1",
-    "stupid-player": "github:kicumkicum/stupid-player#6bd3ae2",
+    "stupid-player": "0.4.2",
     "ym-api": "1.0.0"
   },
   "devDependencies": {

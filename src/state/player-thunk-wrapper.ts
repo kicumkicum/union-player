@@ -19,7 +19,7 @@ interface PlayerThunkWrapper {
   resume: () => State;
   togglePause: () => State;
   stop: () => State;
-  setVolume: () => number;
+  setVolume: (volume: number) => number;
   toggleMute: () => boolean;
 }
 

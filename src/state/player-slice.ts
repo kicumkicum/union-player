@@ -3,7 +3,7 @@ import {State} from 'stupid-player';
 import {createPlayerThunkWrapper} from './player-thunk-wrapper';
 import {player} from '../singletone';
 
-const {togglePause, stop, play, toggleMute} = createPlayerThunkWrapper(player);
+const {togglePause, stop, play, toggleMute, setVolume} = createPlayerThunkWrapper(player);
 
 export const playerSlice = createSlice({
     name: 'player',
@@ -26,6 +26,13 @@ export const playerSlice = createSlice({
         },
 
         // @ts-ignore
+        [setVolume.fulfilled as unknown as string]: (state, action) => {
+            const volume = action.payload;
+
+            state.volume = volume;
+        },
+
+        // @ts-ignore
         [stop.fulfilled as unknown as string]: (state, action) => {
             state.state = action.payload;
         },
@@ -44,4 +51,4 @@ const r = playerSlice.reducer;
 //@ts-ignore
 export {togglePause, r}
 
-export default {togglePause, stop, play, toggleMute};
+export default {togglePause, stop, play, toggleMute, setVolume};

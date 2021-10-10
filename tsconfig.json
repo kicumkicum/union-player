@@ -7,7 +7,9 @@
     "sourceMap": true,
     "outDir": "dist",
     "noImplicitAny": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "resolveJsonModule": true,
   },
-  "lib": ["es2015"]
+  "lib": ["es2015"],
+  "exclude": ["src/ui/web-app", "src/__prototypes__"]
 }
