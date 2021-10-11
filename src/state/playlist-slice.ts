@@ -2,15 +2,20 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {Track} from 'ym-api/dist/types';
 import {State} from './store';
 import {
-    auth as auth_,
-    loadPopularTracksByArtist as loadPopularTracksByArtist_,
-    loadTracksByArtists as loadTracksByArtists_,
-    loadTrackUrl as loadTrackUrl_,
-    loadPlaylist as loadPlaylist_
+  auth as auth_,
+  loadPopularTracksByArtist as loadPopularTracksByArtist_,
+  loadTracksByArtists as loadTracksByArtists_,
+  loadTrackUrl as loadTrackUrl_,
+  loadAlbumByTrack as loadAlbumByTrack_,
+  loadPlaylist as loadPlaylist_,
 } from '../use-cases/playlist';
 
 const selectArtist = (state: State) => {
     return state.playlist.activeTrack.track.artists[0];
+};
+
+const selectTrack = (state: State) => {
+    return state.playlist.activeTrack.track;
 };
 
 const createPlaylistLogic = (): any => {
@@ -24,6 +29,14 @@ const createPlaylistLogic = (): any => {
           async (_, thunkApi) => {
               const artist = selectArtist(thunkApi.getState() as State);
               return loadPopularTracksByArtist_(artist.id);
+          }
+        ),
+        loadAlbumByTrack: createAsyncThunk(
+          'loadAlbumByTrack',
+          async (_, thunkApi) => {
+              const track = selectTrack(thunkApi.getState() as State);
+
+              return loadAlbumByTrack_(track);
           }
         ),
     };
@@ -77,11 +90,14 @@ export const playlistSlice = createSlice({
             state.tracks = action.payload;
         },
 
-      //@ts-ignore
-      [loadPopularTracksByArtist.fulfilled as unknown as string]: (state, action) => {
-          state.tracks = action.payload;
-      },
-
+        //@ts-ignore
+        [loadPopularTracksByArtist.fulfilled as unknown as string]: (state, action) => {
+            state.tracks = action.payload;
+        },
+        //@ts-ignore
+        [loadAlbumByTrack.fulfilled as unknown as string]: (state, action) => {
+            state.tracks = action.payload;
+        },
      //@ts-ignore
      [loadTrackUrl.fulfilled as unknown as string]: (state, action) => {
             state.activeUrl = action.payload;
@@ -113,4 +129,6 @@ export default {
     auth,
     //@ts-ignore
     loadPopularTracksByArtist,
+    //@ts-ignore
+    loadAlbumByTrack,
 };

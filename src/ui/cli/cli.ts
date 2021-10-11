@@ -19,7 +19,7 @@ const render = (state: State) => {
     useEffect(() => {
         const {track} = state.playlist.activeTrack;
 
-        console.log(`Play: ${track.artists[0].name} - ${track.title} > ${track.albums[0].title}`)
+        console.log(`Play: ${track.artists[0].name} - ${track.title} :: ${track.albums[0].title}`)
     }, [state.playlist.activeTrack], 3);
 };
 

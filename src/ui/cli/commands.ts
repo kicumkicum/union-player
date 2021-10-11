@@ -14,6 +14,7 @@ export enum Command {
     PREV_TRACK = 'prev-track',
     SELECT_PLAYLIST = 'select-playlist',
     SHOW_PLAYLISTS = 'show-playlists',
+    PLAY_ALBUM_BY_SONG = 'play-album-by-song',
     EXIT = 'exit',
     PLAY_POPULAR = 'play-popular-by-artist',
     PLAY_ARTIST = 'play-artist',
@@ -29,6 +30,7 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.PREV_TRACK]: ['r', 'prev'],
     [Command.TOGGLE_MUTE]: ['m', 'mute', 'unmute', 'toggle-mute'],
     [Command.SHOW_PLAYLISTS]: [],
+    [Command.PLAY_ALBUM_BY_SONG]: ['a'],
     [Command.SELECT_PLAYLIST]: [],
     [Command.EXIT]: ['q', 'exit', 'quit'],
     [Command.PLAY_POPULAR]: ['o'],
@@ -105,6 +107,7 @@ export const createCommands = (player: StupidPlayer, dispatch: any) => {
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,
         [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,
         [Command.EXIT]: async () => process.exit(0),
+        [Command.PLAY_ALBUM_BY_SONG]: () => dispatch(loadAlbumByTrack()),
         [Command.PLAY_POPULAR]: () => dispatch(loadPopularTracksByArtist()),
         [Command.PLAY_ARTIST]: (artist: string) => {
             return dispatch(loadTracksByArtists([artist]))
