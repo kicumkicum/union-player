@@ -2,6 +2,8 @@ import {StupidPlayer} from 'stupid-player';
 import {togglePause, play, toggleMute, setVolume} from '../../state/player-slice.api';
 import ps, {setActiveNext, setActivePrev} from '../../state/playlist-slice';
 import {selectVolume} from '../../state/player-selectors';
+import {layouts} from '../../../keyboard-layouts';
+import config from '../../../config';
 
 const {loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists} = ps;
 
@@ -116,7 +118,27 @@ export const createCommands = (player: StupidPlayer, dispatch: any) => {
 
     const getExecCommand = (command: string): [Command, (...args: any[]) => Promise<void>] => {
         const command_ = Object.keys(CommandAlias).find((key) => {
-            return CommandAlias[key as Command].some((alias) => alias === command);
+            return CommandAlias[key as Command].some((alias) => {
+                if (alias === command) {
+                    return true;
+                }
+
+                if (alias.length === 1) {
+                    const baseLayout = config.mainEnLayout;
+                    const keyPosition = baseLayout.indexOf(alias);
+
+                    const result = Object.keys(layouts).some((key) => {
+                        // @ts-ignore
+                        return layouts[key][keyPosition] === command;
+                    });
+
+                    if (result) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
         }) as Command;
 
         return [command_, commandCallback[command_]];

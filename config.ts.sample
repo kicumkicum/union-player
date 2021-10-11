@@ -1,14 +1,11 @@
-import {locales} from './locale';
+import {layouts} from './keyboard-layouts';
 
 export const config = {
     login: '',
     password: '',
     token: '',
-    locales: [locales.EN, locales.RU],
-    locale: {
-        main: locales.EN,
-        extra: [locales.RU],
-    }
+    layouts: [layouts.EN, layouts.RU],
+    mainEnLayout: layouts.EN,
 };
 
 type Config = typeof config;
