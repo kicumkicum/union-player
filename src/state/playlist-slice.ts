@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {CaseReducer, createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Track} from 'ym-api/dist/types';
 import {State} from './store';
 import {
@@ -16,6 +16,10 @@ const selectArtist = (state: State) => {
 
 const selectTrack = (state: State) => {
     return state.playlist.activeTrack.track;
+};
+
+const setTracks: CaseReducer = (state: State['playlist'], action: PayloadAction<Track[]>) => {
+  state.tracks = action.payload;
 };
 
 const createPlaylistLogic = (): any => {
@@ -81,33 +85,17 @@ export const playlistSlice = createSlice({
         },
     },
     extraReducers: {
-        //@ts-ignore
-        [loadPlaylist.fulfilled as unknown as string]: (state, action) => {
-            state.tracks = action.payload;
-        },
-        //@ts-ignore
-        [loadTracksByArtists.fulfilled as unknown as string]: (state, action) => {
-            state.tracks = action.payload;
-        },
-
-        //@ts-ignore
-        [loadPopularTracksByArtist.fulfilled as unknown as string]: (state, action) => {
-            state.tracks = action.payload;
-        },
-        //@ts-ignore
-        [loadAlbumByTrack.fulfilled as unknown as string]: (state, action) => {
-            state.tracks = action.payload;
-        },
-     //@ts-ignore
-     [loadTrackUrl.fulfilled as unknown as string]: (state, action) => {
+        [loadPlaylist.fulfilled]: setTracks,
+        [loadTracksByArtists.fulfilled]: setTracks,
+        [loadPopularTracksByArtist.fulfilled]: setTracks,
+        [loadAlbumByTrack.fulfilled]: setTracks,
+        [loadTrackUrl.fulfilled]: (state, action) => {
             state.activeUrl = action.payload;
         },
-    [loadTrackUrl.rejected as unknown as string]: (state, action) => {
-                console.log('Error:', action);
-            },
-
-      //@ts-ignore
-      [auth.fulfilled as unknown as string]: (state, action) => {
+        [loadTrackUrl.rejected]: (state, action) => {
+            console.log('Error:', action);
+        },
+        [auth.fulfilled]: (state, action) => {
             const {access_token} = action.payload;
             state.token = access_token;
         },
@@ -119,16 +107,10 @@ export const {setActiveTrack, setActiveNext, setActivePrev} = playlistSlice.acti
 export const reducer = playlistSlice.reducer;
 
 export default {
-    //@ts-ignore
     loadTracksByArtists,
-    //@ts-ignore
     loadPlaylist,
-    //@ts-ignore
     loadTrackUrl,
-    //@ts-ignore
     auth,
-    //@ts-ignore
     loadPopularTracksByArtist,
-    //@ts-ignore
     loadAlbumByTrack,
 };
