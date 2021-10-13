@@ -3,9 +3,23 @@ import {Album, Track} from "ym-api/dist/types";
 import config from "../../config";
 import {ymApi} from "../singletone";
 
-const loadPlaylist = async () => {
+enum PlaylistType {
+  playlistOfTheDay = 'playlistOfTheDay',
+  missedLikes = 'missedLikes',
+  recentTracks = 'recentTracks',
+  neverHeard = 'neverHeard',
+  kinopoisk = 'kinopoisk',
+  summerTop2021 = 'summerTop2021',
+  origin = 'origin',
+}
+
+const loadPlaylist = async (playlistType: PlaylistType) => {
     const feed = await ymApi.getFeed();
-    const playlistLite = feed.generatedPlaylists[0];
+    const playlistLite = feed.generatedPlaylists.find((it) => it.type === playlistType);
+
+    if (!playlistLite) {
+      throw new Error('Not find playlist')
+    }
 
     const playlist = await ymApi.getPlaylist(playlistLite.data.kind, playlistLite.data.owner.uid);
 

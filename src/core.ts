@@ -9,13 +9,36 @@ const {loadTrackUrl, loadPlaylist, auth, loadTracksByArtists} = p;
 
 const {useEffect} = notReact;
 
+type Command = 'playlist';
+type Args = {[key in `--${Command}`]: string};
+
+const parseArgs = (): Args => {
+    return process.argv.slice(2).reduce((acc, cur, i, arr) => {
+        let key, val;
+
+        if (cur.startsWith('--')) {
+            key = cur;
+        } else {
+            val = cur;
+            key = arr[i - 1];
+        }
+
+        return {
+            ...acc,
+            [key]: val,
+        }
+    }, {} as Args);
+};
+
 export const createCore = (player: StupidPlayer, store: Store) => {
+    const playlist = parseArgs()['--playlist'];
+
     store.subscribe(() => {
         const state = store.getState();
 
         useEffect(() => {
             // store.dispatch(setActivePlaylist(0));
-            store.dispatch(loadTracksByArtists(['жщ']));
+            store.dispatch(loadPlaylist(playlist));
         }, [state.playlist.token], 0);
 
         useEffect(() => {
