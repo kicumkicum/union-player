@@ -4,9 +4,23 @@ import {r as playerReducer} from './player-slice';
 //@ts-ignore
 import devToolsEnhancer from 'remote-redux-devtools';
 
+const IS_DEBUG = false;
+
 type Store = typeof store;
 
 type State = ReturnType<typeof store.getState>;
+
+const enhancers = [];
+
+if (IS_DEBUG) {
+  enhancers.push(devToolsEnhancer({
+    suppressConnectErrors: true,
+    name: 'Union Player',
+    realtime: true,
+    hostname: 'localhost',
+    port: 8080,
+  }));
+}
 
 const store = configureStore({
   reducer: {
@@ -14,10 +28,7 @@ const store = configureStore({
     player: playerReducer,
   },
     devTools: true,
-    enhancers: [devToolsEnhancer({
-        name: 'Android app', realtime: true,
-        hostname: 'localhost', port: 8080,
-    })]
+    enhancers,
 });
 
 
