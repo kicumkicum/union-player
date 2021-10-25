@@ -12,6 +12,7 @@ type KK = {
 
 const k: KK = {} as KK;
 
+// TODO: Unused that wrapper
 Object.keys(p).forEach((key: keyof typeof p) => {
     const it = p[key];
 

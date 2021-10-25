@@ -1,9 +1,22 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {State} from 'stupid-player';
-import {createPlayerThunkWrapper} from './player-thunk-wrapper';
-import {player} from '../singletone';
+import {api as playerApi} from '../use-cases/player';
+import {wrapApiByThunk} from './thunk-wrapper';
 
-const {togglePause, stop, play, toggleMute, setVolume} = createPlayerThunkWrapper(player);
+interface PlayerThunkWrapper {
+    play: (uri: string) => {
+        uri: string,
+        state: State,
+    };
+    pause: () => State;
+    resume: () => State;
+    togglePause: () => State;
+    stop: () => State;
+    setVolume: (volume: number) => number;
+    toggleMute: () => boolean;
+}
+
+const playerApiWrapped = <PlayerThunkWrapper>wrapApiByThunk(playerApi);
 
 export const playerSlice = createSlice({
     name: 'player',
@@ -16,29 +29,29 @@ export const playerSlice = createSlice({
     reducers: {},
     extraReducers: {
         // @ts-ignore
-        [togglePause.fulfilled as unknown as string]: (state, action) => {
+        [playerApiWrapped.togglePause.fulfilled as unknown as string]: (state, action) => {
             state.state = action.payload;
         },
 
         // @ts-ignore
-        [toggleMute.fulfilled as unknown as string]: (state, action) => {
+        [playerApiWrapped.toggleMute.fulfilled as unknown as string]: (state, action) => {
             state.isMuted = action.payload;
         },
 
         // @ts-ignore
-        [setVolume.fulfilled as unknown as string]: (state, action) => {
+        [playerApiWrapped.setVolume.fulfilled as unknown as string]: (state, action) => {
             const volume = action.payload;
 
             state.volume = volume;
         },
 
         // @ts-ignore
-        [stop.fulfilled as unknown as string]: (state, action) => {
+        [playerApiWrapped.stop.fulfilled as unknown as string]: (state, action) => {
             state.state = action.payload;
         },
 
         // @ts-ignore
-        [play.fulfilled as unknown as string]: (state, action) => {
+        [playerApiWrapped.play.fulfilled as unknown as string]: (state, action) => {
             const {uri, state: playerState} = action.payload;
 
             state.state = playerState;
@@ -47,8 +60,11 @@ export const playerSlice = createSlice({
     }
 });
 
+
 const r = playerSlice.reducer;
+const {togglePause, stop, play, toggleMute, setVolume} = playerApiWrapped;
+
 //@ts-ignore
-export {togglePause, r}
+export {togglePause, stop, play, toggleMute, setVolume, r};
 
 export default {togglePause, stop, play, toggleMute, setVolume};
