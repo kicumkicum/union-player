@@ -64,6 +64,12 @@ const toggleMute = async (value: number, thunkApi: any) => {
   return !isMuted;
 };
 
+const api = {
+  play, pause, resume, toggleMute, togglePause, stop, setVolume
+};
+
+export {api};
+
 export {
   play, pause, resume, toggleMute, togglePause, stop, setVolume
 };
