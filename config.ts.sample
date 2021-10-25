@@ -4,6 +4,7 @@ export const config = {
     login: '',
     password: '',
     token: '',
+    telegramToken: '1234567890:fooBARbazBooz',
     layouts: [layouts.EN, layouts.RU],
     mainEnLayout: layouts.EN,
 };
