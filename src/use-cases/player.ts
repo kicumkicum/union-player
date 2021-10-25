@@ -2,8 +2,15 @@ import {StupidPlayer} from "stupid-player";
 import {State as AppState} from "../state/store";
 import {player} from "../singletone";
 
-const play = async (uri: string) => {
+const play = async (uri: string, thunkApi: any) => {
   await player.play(await StupidPlayer.getReadStream(uri));
+
+  const {isMuted} = (thunkApi.getState() as AppState).player;
+
+  // Workaround. Need fix restore volume in stupid-player
+  if (isMuted) {
+    await player.setVolume(0);
+  }
 
   return {
     uri,
