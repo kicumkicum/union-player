@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "1.5.1",
+    "chromecast-api": "0.3.4",
     "range-stream": "1.1.0",
     "readable-stream-clone": "0.0.7",
     "remote-redux-devtools": "^0.5.16",
