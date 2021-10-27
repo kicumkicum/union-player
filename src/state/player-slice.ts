@@ -43,6 +43,7 @@ export const playerSlice = createSlice({
             const volume = action.payload;
 
             state.volume = volume;
+            state.isMuted = false;
         },
 
         // @ts-ignore
