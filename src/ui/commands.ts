@@ -1,11 +1,11 @@
 import {StupidPlayer} from 'stupid-player';
-import {togglePause, play, toggleMute, setVolume} from '../../state/player-slice';
-import {setActiveNext, setActivePrev, loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists, search} from '../../state/playlist-slice';
-import {selectVolume} from '../../state/player-selectors';
-import config from '../../../config';
-import {selectArtist, selectTrack} from "../../state/playlist-selectors";
-import {createChromecast} from "../chromecast/chromecast";
-import {Store} from "../../state/store";
+import {togglePause, play, toggleMute, setVolume} from '../state/player-slice';
+import {setActiveNext, setActivePrev, loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists, search} from '../state/playlist-slice';
+import {selectVolume} from '../state/player-selectors';
+import config from '../../config';
+import {selectArtist, selectTrack} from "../state/playlist-selectors";
+import {createChromecast} from "./chromecast/chromecast";
+import {Store} from "../state/store";
 
 export enum Command {
     PLAY = 'play',
@@ -42,53 +42,6 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.VOLUME_DEC]: ['volume-down', 'down'],
     [Command.SEARCH]: ['search', 's'],
 };
-
-// const commander = () => {};
-//
-// commander()
-//     .command('play')
-//         .option('--url')
-//         .option('--service')
-//         .key('-p')
-//     .command('pause')
-//         .hotKey('p')
-//     .command('resume')
-//         .hotKey('p')
-//     .command('volume')
-//         .value(true, 'DESCRIPTION')
-//         .option('--value')
-//         .key('-v');
-//
-// const commands = {
-//     ['play']: {
-//         options: [{
-//             '--url': null,
-//             '--service': null,
-//             '--volume': null,
-//         }],
-//         shortKey: '-p',
-//         callback: (value, options) => {
-//             const {url, service, volume} = options;
-//
-//
-//         }
-//     },
-//     'pause': {
-//         hotKey: 'p',
-//     },
-//     'resume': {
-//         hotKey: 'p'
-//     },
-//     'volume': {
-//         value: '--value',
-//         options: [{
-//             name: '--value',
-//             shortName: '-v',
-//             description: 'DESCRIPTION',
-//         }],
-//         key: '-v'
-//     }
-// }
 
 export const createCommands = (player: StupidPlayer, dispatch: any) => {
     const commandCallback = {
