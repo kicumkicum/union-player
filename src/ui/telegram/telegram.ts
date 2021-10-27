@@ -1,10 +1,9 @@
 import {StupidPlayer} from 'stupid-player';
 import {Telegraf} from 'telegraf'
-import {togglePause, toggleMute} from '../../state/player-slice';
-import {setActiveNext, setActivePrev} from '../../state/playlist-slice';
 import {State, Store} from '../../state/store';
 import {useEffect} from '../../utils/not-react';
 import config from '../../../config';
+import {createCommands} from '../commands';
 
 const render = (state: State, ctx: any) => {
   useEffect(() => {
@@ -19,40 +18,28 @@ const createTelegram = async (player: StupidPlayer, store: Store) => {
   // @ts-ignore
   let ctx_;
 
+  const getExecCommand = createCommands(player, dispatch, store);
+
   try {
     const bot = new Telegraf(config.telegramToken);
 
     bot.on('text', async (ctx) => {
       const {text} = ctx.update.message;
+      const command = text.toLowerCase();
 
-      switch (text.toLowerCase()) {
-        case 'p':
-          // @ts-ignore
-          dispatch(togglePause());
-          break;
-        case 'm':
-          // @ts-ignore
-          dispatch(toggleMute());
-          break;
-        case 'n':
-          dispatch(setActiveNext());
-          break;
-        case 'r':
-          dispatch(setActivePrev());
-          break;
-        case 's':
-          ctx_ = ctx;
-          break;
+      const [type, callback] = getExecCommand(command);
+
+      ctx.reply(type);
+
+      if (callback) {
+        await callback();
+      } else {
+        switch (command) {
+          case 's':
+            ctx_ = ctx;
+            break;
+        }
       }
-      // @ts-ignore
-      const result = {data: {RelatedTopics: []}};
-
-      ctx.reply(JSON.stringify(result.data.RelatedTopics.map((it) => {
-        return {
-          url: it.FirstURL,
-          text: it.Text
-        };
-      })));
     });
 
     await bot.launch();
