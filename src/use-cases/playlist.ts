@@ -72,11 +72,15 @@ const loadTracksByArtists = async (artists: string[]) => {
   return shuffle([].concat(...tracks));
 };
 
-export {
+const playlistApi = {
   loadPlaylist,
   loadPopularTracksByArtist,
   loadTracksByArtist,
   loadTracksByArtists,
   loadTrackUrl,
   auth,
+};
+
+export {
+  playlistApi,
 }
