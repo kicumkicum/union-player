@@ -3,17 +3,15 @@ import {Telegraf} from 'telegraf'
 import {togglePause, toggleMute} from '../../state/player-slice';
 import {setActiveNext, setActivePrev} from '../../state/playlist-slice';
 import {State, Store} from '../../state/store';
-import {notReact} from '../../utils/not-react';
+import {useEffect} from '../../utils/not-react';
 import config from '../../../config';
-
-const {useEffect} = notReact;
 
 const render = (state: State, ctx: any) => {
   useEffect(() => {
     const {track} = state.playlist.activeTrack;
 
     ctx && ctx.reply(`Play: ${track.artists[0].name} - ${track.title} :: ${track.albums[0].title}`)
-  }, [state.playlist.activeTrack], 33);
+  }, [state.playlist.activeTrack], 'telegram.send_track_info');
 };
 
 const createTelegram = async (player: StupidPlayer, store: Store) => {
