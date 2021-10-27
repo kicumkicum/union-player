@@ -1,4 +1,3 @@
-import {StupidPlayer} from 'stupid-player';
 import {Telegraf} from 'telegraf'
 import {State, Store} from '../../state/store';
 import {useEffect} from '../../utils/not-react';
@@ -13,12 +12,12 @@ const render = (state: State, ctx: any) => {
   }, [state.playlist.activeTrack], 'telegram.send_track_info');
 };
 
-const createTelegram = async (player: StupidPlayer, store: Store) => {
+const createTelegram = async (store: Store) => {
   const {dispatch} = store;
   // @ts-ignore
   let ctx_;
 
-  const getExecCommand = createCommands(player, dispatch, store);
+  const getExecCommand = createCommands(dispatch, store);
 
   try {
     const bot = new Telegraf(config.telegramToken);
