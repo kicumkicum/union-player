@@ -3,9 +3,7 @@ import {StupidPlayer} from 'stupid-player';
 import {State, Store} from '../../state/store';
 import {Interface} from 'readline';
 import {Command, createCommands} from './commands';
-import {notReact} from '../../utils/not-react';
-
-const {useEffect} = notReact;
+import {useEffect} from '../../utils/not-react';
 
 const createCLI = (player: StupidPlayer, store: Store): void => {
     new CLI(player, store);
@@ -20,7 +18,7 @@ const render = (state: State) => {
         const {track} = state.playlist.activeTrack;
 
         console.log(`Play: ${track.artists[0].name} - ${track.title} :: ${track.albums[0].title}`)
-    }, [state.playlist.activeTrack], 3);
+    }, [state.playlist.activeTrack], 'cli.show_playing_track');
 };
 
 const CLI = class {

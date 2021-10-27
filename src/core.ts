@@ -1,10 +1,8 @@
 import {StupidPlayer} from 'stupid-player';
 import {Store} from './state/store';
-import {notReact} from './utils/not-react';
+import {useEffect} from './utils/not-react';
 import {play, stop} from './state/player-slice';
 import {setActiveTrack, setActiveNext, loadTrackUrl, loadPlaylist, auth} from './state/playlist-slice';
-
-const {useEffect} = notReact;
 
 type Command = 'playlist';
 type Args = {[key in `--${Command}`]: string};
@@ -39,17 +37,17 @@ export const createCore = (player: StupidPlayer, store: Store) => {
             // dispatch(loadTracksByArtists(['СахарСоСтеклом']));
             // @ts-ignore
             dispatch(loadPlaylist(playlist));
-        }, [state.playlist.token], 0);
+        }, [state.playlist.token], 'core.load_playlist');
 
         useEffect(() => {
             const {activeUrl} = state.playlist;
             // @ts-ignore
             activeUrl ? dispatch(play(activeUrl)) : dispatch(stop());
-        }, [state.playlist.activeUrl], 1);
+        }, [state.playlist.activeUrl], 'core.play_track');
 
         useEffect(() => {
             dispatch(setActiveTrack(state.playlist.tracks[0]));
-        }, [state.playlist.tracks], 10);
+        }, [state.playlist.tracks], 'core.set_active_track');
 
         useEffect(() => {
             // TODO: Why activeTrack is null after changing?
@@ -57,7 +55,7 @@ export const createCore = (player: StupidPlayer, store: Store) => {
                 // @ts-ignore
                 dispatch(loadTrackUrl(state.playlist.activeTrack.track));
             }
-        }, [state.playlist.activeTrack], 2);
+        }, [state.playlist.activeTrack], 'core.load_track_url');
     });
 
     player.on(player.EVENT_STOP, () => {

@@ -1,21 +1,23 @@
-export const notReact = (function() {
-    const hooks: Array<any> = [];
+type Hooks = {[key: string]: Array<any>};
 
-    function useEffect(callback: any, dependencies: Array<any>, id: number) {
-        const oldDependencies = hooks[id];
+const hooks: Hooks = {} as Hooks;
 
-        let hasChanged = false;
+function useEffect(callback: any, dependencies: Array<any>, id: string) {
+    const oldDependencies = hooks[id];
 
-        if (oldDependencies) {
-            hasChanged = dependencies.some((dep, i) => !Object.is(dep, oldDependencies[i]));
-        }
+    let hasChanged = false;
 
-        hooks[id] = dependencies;
-
-        if (hasChanged) {
-            callback();
-        }
+    if (oldDependencies) {
+        hasChanged = dependencies.some((dep, i) => !Object.is(dep, oldDependencies[i]));
     }
 
-    return {useEffect};
-})();
+    hooks[id] = dependencies;
+
+    if (hasChanged) {
+        callback();
+    }
+}
+
+export {
+    useEffect,
+};

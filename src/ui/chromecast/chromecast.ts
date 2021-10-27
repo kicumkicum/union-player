@@ -2,11 +2,9 @@ import {StupidPlayer} from 'stupid-player';
 // @ts-ignore
 import ChromecastAPI from 'chromecast-api';
 import {Track} from 'ym-api/dist/types';
-import {notReact} from '../../utils/not-react';
+import {useEffect} from '../../utils/not-react';
 import {State, Store} from '../../state/store';
 import './patch';
-
-const {useEffect} = notReact;
 
 const getTrackSrc = (track: Track, size: number) => {
     if (!track.coverUri) {
@@ -33,13 +31,13 @@ const render = (state: State) => {
                 title: `${track.title}`,
                 url: getTrackSrc(track, 400),
             },
-            // @ts-ignore
-        }, function (err) {
-            if (!err)
-                console.log('Playing in your chromecast');
+        }, function (err: Error) {
+            if (err) {
+                console.log('Chromecast::Playing error', err);
+            }
         });
         // @ts-ignore
-    }, [state.playlist.activeUrl], 4589);
+    }, [state.playlist.activeUrl], 'chromecast.play_track');
 };
 
 const createChromecast = (player: StupidPlayer, store: Store): void => {
