@@ -1,4 +1,3 @@
-import {StupidPlayer} from 'stupid-player';
 import {togglePause, play, toggleMute, setVolume} from '../state/player-slice';
 import {setActiveNext, setActivePrev, loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists, search} from '../state/playlist-slice';
 import {selectVolume} from '../state/player-selectors';
@@ -43,7 +42,7 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.SEARCH]: ['search', 's'],
 };
 
-export const createCommands = (player: StupidPlayer, dispatch: any) => {
+export const createCommands = (dispatch: any, store: Store) => {
     const commandCallback = {
         [Command.NEXT_TRACK]: async () => dispatch(setActiveNext()),
         [Command.SEARCH]: async (query: string) => dispatch(search(query)),

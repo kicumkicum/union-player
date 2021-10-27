@@ -1,12 +1,11 @@
 import * as readline from 'readline';
-import {StupidPlayer} from 'stupid-player';
 import {State, Store} from '../../state/store';
 import {Interface} from 'readline';
 import {Command, createCommands} from '../commands';
 import {useEffect} from '../../utils/not-react';
 
-const createCLI = (player: StupidPlayer, store: Store): void => {
-    new CLI(player, store);
+const createCLI = (store: Store): void => {
+    new CLI(store);
 };
 
 const render = (state: State) => {
@@ -22,12 +21,9 @@ const render = (state: State) => {
 };
 
 const CLI = class {
-    private player: StupidPlayer;
     private rl: Interface;
 
-    constructor(player: StupidPlayer, store: Store) {
-        this.player = player;
-
+    constructor(store: Store) {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onReadLine = this.onReadLine.bind(this);
 
@@ -36,7 +32,7 @@ const CLI = class {
             output: process.stdout,
           });
 
-        this.getExecCommand = createCommands(player, store.dispatch);
+        this.getExecCommand = createCommands(store.dispatch, store);
 
         // readline.emitKeypressEvents(process.stdin);
         // process.stdin.setRawMode(true);
@@ -145,7 +141,6 @@ const CLI = class {
         process.stdin.removeListener('keypress', this.onKeyDown);
     }
 };
-
 
 export {
   createCLI,

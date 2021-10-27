@@ -1,4 +1,3 @@
-import {StupidPlayer} from 'stupid-player';
 // @ts-ignore
 import ChromecastAPI from 'chromecast-api';
 import {Track} from 'ym-api/dist/types';
@@ -40,7 +39,7 @@ const render = (state: State) => {
     }, [state.playlist.activeUrl], 'chromecast.play_track');
 };
 
-const createChromecast = (player: StupidPlayer, store: Store): void => {
+const createChromecast = (store: Store): void => {
     const client = new ChromecastAPI();
 
     client.on('device', function (device_: any) {
