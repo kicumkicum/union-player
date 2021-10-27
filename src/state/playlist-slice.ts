@@ -1,7 +1,7 @@
 import {CaseReducer, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Track} from 'ym-api/dist/types';
 import {State} from './store';
-import {playlistApi} from '../use-cases/playlist';
+import {playlistApi} from '../api/playlist';
 import {wrapApiByThunk} from "./thunk-wrapper";
 
 const setTracks: CaseReducer = (state: State['playlist'], action: PayloadAction<Track[]>) => {

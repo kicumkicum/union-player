@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {State} from 'stupid-player';
-import {api as playerApi} from '../use-cases/player';
+import {api as playerApi} from '../api/player';
 import {wrapApiByThunk} from './thunk-wrapper';
 
 interface PlayerThunkWrapper {
