@@ -81,10 +81,8 @@ export const createCommands = (dispatch: any, store: Store) => {
                     const baseLayout = config.mainEnLayout;
                     const keyPosition = baseLayout.indexOf(alias);
 
-                    const result = Object.keys(layouts).some((key) => {
-                        // @ts-ignore
-                        return layouts[key][keyPosition] === command;
-                    });
+                    const result = config.layouts
+                      .some((layout) => layout[keyPosition] === command);
 
                     if (result) {
                         return true;
