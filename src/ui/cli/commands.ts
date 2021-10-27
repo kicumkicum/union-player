@@ -2,10 +2,12 @@ import {StupidPlayer} from 'stupid-player';
 import {togglePause, play, toggleMute, setVolume} from '../../state/player-slice.api';
 import ps, {setActiveNext, setActivePrev} from '../../state/playlist-slice';
 import {selectVolume} from '../../state/player-selectors';
-import {layouts} from '../../../keyboard-layouts';
 import config from '../../../config';
+import {selectArtist, selectTrack} from "../../state/playlist-selectors";
+import {createChromecast} from "../chromecast/chromecast";
+import {Store} from "../../state/store";
 
-const {loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists} = ps;
+const {loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists, search} = ps;
 
 export enum Command {
     PLAY = 'play',
@@ -22,6 +24,7 @@ export enum Command {
     PLAY_ARTIST = 'play-artist',
     VOLUME_INC = 'volume-inc',
     VOLUME_DEC = 'volume-dec',
+    SEARCH = 'search',
 }
 
 const CommandAlias: Record<Command, string[]> = {
@@ -39,6 +42,7 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.PLAY_ARTIST]: ['play-artist', 'pa'],
     [Command.VOLUME_INC]: ['volume-up', 'up'],
     [Command.VOLUME_DEC]: ['volume-down', 'down'],
+    [Command.SEARCH]: ['search', 's'],
 };
 
 // const commander = () => {};
@@ -91,6 +95,7 @@ const CommandAlias: Record<Command, string[]> = {
 export const createCommands = (player: StupidPlayer, dispatch: any) => {
     const commandCallback = {
         [Command.NEXT_TRACK]: async () => dispatch(setActiveNext()),
+        [Command.SEARCH]: async (query: string) => dispatch(search(query)),
         [Command.PREV_TRACK]: async () => dispatch(setActivePrev()),
         [Command.TOGGLE_PLAY]: async () => togglePause(),
         [Command.PAUSE]: async () => togglePause(),
@@ -109,10 +114,10 @@ export const createCommands = (player: StupidPlayer, dispatch: any) => {
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,
         [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,
         [Command.EXIT]: async () => process.exit(0),
-        [Command.PLAY_ALBUM_BY_SONG]: () => dispatch(loadAlbumByTrack()),
-        [Command.PLAY_POPULAR]: () => dispatch(loadPopularTracksByArtist()),
-        [Command.PLAY_ARTIST]: (artist: string) => {
-            return dispatch(loadTracksByArtists([artist]))
+        [Command.PLAY_ALBUM_BY_SONG]: () => dispatch(loadAlbumByTrack(selectTrack())),
+        [Command.PLAY_POPULAR]: () => dispatch(loadPopularTracksByArtist(selectArtist().id)),
+        [Command.PLAY_ARTIST]: (...artists: string[]) => {
+            return dispatch(loadTracksByArtists(artists));
         },
     };
 
