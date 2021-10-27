@@ -1,11 +1,8 @@
 import {StupidPlayer} from 'stupid-player';
 import {Store} from './state/store';
 import {notReact} from './utils/not-react';
-import {play, stop} from './state/player-slice.api';
-import p from './state/playlist-slice';
-import {setActiveTrack, setActiveNext} from './state/playlist-slice';
-
-const {loadTrackUrl, loadPlaylist, auth, loadTracksByArtists} = p;
+import {play, stop} from './state/player-slice';
+import {setActiveTrack, setActiveNext, loadTrackUrl, loadPlaylist, auth} from './state/playlist-slice';
 
 const {useEffect} = notReact;
 
@@ -32,36 +29,41 @@ const parseArgs = (): Args => {
 
 export const createCore = (player: StupidPlayer, store: Store) => {
     const playlist = parseArgs()['--playlist'];
+    const {dispatch} = store;
 
     store.subscribe(() => {
         const state = store.getState();
 
         useEffect(() => {
-            // store.dispatch(setActivePlaylist(0));
-            store.dispatch(loadPlaylist(playlist));
+            // dispatch(setActivePlaylist(0));
+            // dispatch(loadTracksByArtists(['СахарСоСтеклом']));
+            // @ts-ignore
+            dispatch(loadPlaylist(playlist));
         }, [state.playlist.token], 0);
 
         useEffect(() => {
             const {activeUrl} = state.playlist;
             // @ts-ignore
-            activeUrl ? play(activeUrl) : stop();
+            activeUrl ? dispatch(play(activeUrl)) : dispatch(stop());
         }, [state.playlist.activeUrl], 1);
 
         useEffect(() => {
-            store.dispatch(setActiveTrack(state.playlist.tracks[0]));
+            dispatch(setActiveTrack(state.playlist.tracks[0]));
         }, [state.playlist.tracks], 10);
 
         useEffect(() => {
             // TODO: Why activeTrack is null after changing?
             if (state.playlist.activeTrack) {
-                store.dispatch(loadTrackUrl(state.playlist.activeTrack.track));
+                // @ts-ignore
+                dispatch(loadTrackUrl(state.playlist.activeTrack.track));
             }
         }, [state.playlist.activeTrack], 2);
     });
 
     player.on(player.EVENT_STOP, () => {
-        store.dispatch(setActiveNext());
+        dispatch(dispatch(setActiveNext()));
     });
 
-    store.dispatch(auth());
+    // @ts-ignore
+    dispatch(auth());
 };

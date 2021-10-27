@@ -1,13 +1,11 @@
 import {StupidPlayer} from 'stupid-player';
-import {togglePause, play, toggleMute, setVolume} from '../../state/player-slice.api';
-import ps, {setActiveNext, setActivePrev} from '../../state/playlist-slice';
+import {togglePause, play, toggleMute, setVolume} from '../../state/player-slice';
+import {setActiveNext, setActivePrev, loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists, search} from '../../state/playlist-slice';
 import {selectVolume} from '../../state/player-selectors';
 import config from '../../../config';
 import {selectArtist, selectTrack} from "../../state/playlist-selectors";
 import {createChromecast} from "../chromecast/chromecast";
 import {Store} from "../../state/store";
-
-const {loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists, search} = ps;
 
 export enum Command {
     PLAY = 'play',
@@ -97,19 +95,18 @@ export const createCommands = (player: StupidPlayer, dispatch: any) => {
         [Command.NEXT_TRACK]: async () => dispatch(setActiveNext()),
         [Command.SEARCH]: async (query: string) => dispatch(search(query)),
         [Command.PREV_TRACK]: async () => dispatch(setActivePrev()),
-        [Command.TOGGLE_PLAY]: async () => togglePause(),
-        [Command.PAUSE]: async () => togglePause(),
+        [Command.TOGGLE_PLAY]: async () => dispatch(togglePause()),
+        [Command.PAUSE]: async () => dispatch(togglePause()),
             // @ts-ignore
-        [Command.PLAY]: async (url: string) => play(url),
-        [Command.TOGGLE_MUTE]: async () => toggleMute(),
+        [Command.PLAY]: async (url: string) => dispatch(play(url)),
+        [Command.TOGGLE_MUTE]: async () => dispatch(toggleMute()),
         [Command.VOLUME_INC]: async () => {
             const volume = selectVolume();
-            setVolume(volume + 10);
+            dispatch(setVolume(volume + 10));
         },
         [Command.VOLUME_DEC]: async () => {
             const volume = selectVolume();
-            console.log('volume-dec', volume);
-            setVolume(volume - 10);
+            dispatch(setVolume(volume - 10));
         },
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,
         [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,

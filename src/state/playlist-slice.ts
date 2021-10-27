@@ -92,7 +92,7 @@ export const playlistActions = {
     search,
 };
 
-export default {
+export {
     loadTracksByArtists,
     loadPlaylist,
     loadTrackUrl,
