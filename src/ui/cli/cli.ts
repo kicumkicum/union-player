@@ -74,6 +74,12 @@ const CLI = class {
     private async onKeyDown(str, key) {
         const command = key.name || key.sequence;
 
+        const {ctrl, meta, shift} = key;
+
+        if (ctrl || meta || shift) {
+            return;
+        }
+
         if (command === ':') {
             process.stdout.moveCursor(1, 0);
             // process.stdout.clearLine(1)
