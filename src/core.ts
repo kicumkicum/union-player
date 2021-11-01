@@ -59,7 +59,7 @@ export const createCore = (player: StupidPlayer, store: Store) => {
     });
 
     player.on(player.EVENT_STOP, () => {
-        dispatch(dispatch(setActiveNext()));
+        dispatch(setActiveNext());
     });
 
     // @ts-ignore
