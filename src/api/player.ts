@@ -24,14 +24,28 @@ const pause = async () => {
   return player.getState();
 };
 
-const resume = async () => {
+const resume = async (thunkApi: any) => {
   await player.resume();
+
+  const {isMuted} = (thunkApi.getState() as AppState).player;
+
+  // Workaround. Need fix restore volume in stupid-player
+  if (isMuted) {
+    await player.setVolume(0);
+  }
 
   return player.getState();
 };
 
-const togglePause = async () => {
+const togglePause = async (thunkApi: any) => {
   await player.togglePause();
+
+  const {isMuted} = (thunkApi.getState() as AppState).player;
+
+  // Workaround. Need fix restore volume in stupid-player
+  if (isMuted) {
+    await player.setVolume(0);
+  }
 
   return player.getState();
 };
