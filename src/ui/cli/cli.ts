@@ -80,6 +80,10 @@ const CLI = class {
             return;
         }
 
+        if (['backspace', 'delete', 'insert'].some((it) => it === command)) {
+            return;
+        }
+
         if (command === ':') {
             process.stdout.moveCursor(1, 0);
             // process.stdout.clearLine(1)
@@ -105,33 +109,6 @@ const CLI = class {
 
         // TODO: Move to render
         console.log('Unhandle key:', command);
-
-        switch (command) {
-            // case 'm': {
-            //     const volume = p.getVolume()
-            //     await p.setVolume(volume > 0 ? 0 : 100);
-            //     break;
-            // }
-            // case 'v': {
-            //     const volume = parseInt(value, 10);
-            //     await p.setVolume(volume);
-            //     break;
-            // }
-            // case 'up':
-            //     await p.pause();
-            //     await wait(3000);
-            //
-            //     //@ts-ignore
-            //     const readClone1 = p.readStream;
-            //     //@ts-ignore
-            //     p.readStream = readClone1.pipe(rangeStream(500000));
-            //     await p.resume();
-            //     break;
-            // case 'l':
-            //     //@ts-ignore
-            //     console.log(p.readStream);
-            //     break;
-        }
     }
 
     private handleLine() {
