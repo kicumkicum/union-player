@@ -1,6 +1,7 @@
 import {StupidPlayer} from "stupid-player";
 import {State as AppState} from "../state/store";
 import {player} from "../singletone";
+import {IPlayer} from "./i-player";
 
 const play = async (uri: string, thunkApi: any) => {
   await player.play(await StupidPlayer.getReadStream(uri));
@@ -80,6 +81,6 @@ const toggleMute = async (value: number, thunkApi: any) => {
 
 const playerApi = {
   play, pause, resume, toggleMute, togglePause, stop, setVolume
-};
+} as IPlayer;
 
 export {playerApi};

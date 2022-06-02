@@ -50,7 +50,12 @@ const CLI = class {
     }
 
     private async onReadLine(line: string): Promise<void> {
-        const [command, value] = line.substr(1).split(' ');
+        const [command, ...value] = line
+          .replace(/.*:/, ':')
+          .substr(1)
+          .split(' ');
+
+        // TODO: Move to render and to debug
         console.log('line:', line)
         console.log('command:', command)
         console.log('value:', value)
@@ -61,9 +66,10 @@ const CLI = class {
             process.stdout.clearLine(-1);
             process.stdout.moveCursor(-1, 0);
 
-            console.log('Command:', type);
+            // TODO: Move to render
+            console.log('Command:', type, callback());
 
-            await callback(value);
+            await callback(...value);
         }
 
         this.unHandleLine();

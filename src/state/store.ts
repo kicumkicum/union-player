@@ -24,6 +24,7 @@ if (IS_DEBUG) {
 
 const store = configureStore({
   reducer: {
+    player: playerReducer,
     playlist: playlistReducer,
     player: playerReducer,
   },

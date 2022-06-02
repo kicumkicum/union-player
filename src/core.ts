@@ -2,7 +2,7 @@ import {StupidPlayer} from 'stupid-player';
 import {Store} from './state/store';
 import {useEffect} from './utils/not-react';
 import {play, stop} from './state/player-slice';
-import {setActiveTrack, setActiveNext, loadTrackUrl, loadPlaylist, auth} from './state/playlist-slice';
+import {setActiveTrack, setActiveNext, loadTrackUrl, loadPlaylist, auth, loadTracksByArtists} from './state/playlist-slice';
 
 type Command = 'playlist';
 type Args = {[key in `--${Command}`]: string};
@@ -34,7 +34,8 @@ export const createCore = (player: StupidPlayer, store: Store) => {
 
         useEffect(() => {
             // dispatch(setActivePlaylist(0));
-            // dispatch(loadTracksByArtists(['СахарСоСтеклом']));
+            // @ts-ignore
+            // dispatch(loadTracksByArtists(['Валентин Стрыкало']));
             // @ts-ignore
             dispatch(loadPlaylist(playlist));
         }, [state.playlist.token], 'core.load_playlist');
@@ -59,6 +60,11 @@ export const createCore = (player: StupidPlayer, store: Store) => {
     });
 
     player.on(player.EVENT_STOP, () => {
+        dispatch(setActiveNext());
+    });
+
+    player.on(player.EVENT_ERROR, (err) => {
+        console.log('Error handler', err);
         dispatch(setActiveNext());
     });
 

@@ -19,6 +19,7 @@ export enum Command {
     EXIT = 'exit',
     PLAY_POPULAR = 'play-popular-by-artist',
     PLAY_ARTIST = 'play-artist',
+    ADD_CHROMECAST_UI = 'add-chromecast-ui',
     VOLUME_INC = 'volume-inc',
     VOLUME_DEC = 'volume-dec',
     SEARCH = 'search',
@@ -38,36 +39,32 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.PLAY_POPULAR]: ['o'],
     [Command.PLAY_ARTIST]: ['play-artist', 'pa'],
     [Command.VOLUME_INC]: ['volume-up', 'up'],
+    [Command.ADD_CHROMECAST_UI]: ['c'],
     [Command.VOLUME_DEC]: ['volume-down', 'down'],
     [Command.SEARCH]: ['search', 's'],
 };
 
 export const createCommands = (dispatch: any, store: Store) => {
     const commandCallback = {
+        [Command.ADD_CHROMECAST_UI]: async () => createChromecast(store),
         [Command.NEXT_TRACK]: async () => dispatch(setActiveNext()),
         [Command.SEARCH]: async (query: string) => dispatch(search(query)),
         [Command.PREV_TRACK]: async () => dispatch(setActivePrev()),
         [Command.TOGGLE_PLAY]: async () => dispatch(togglePause()),
         [Command.PAUSE]: async () => dispatch(togglePause()),
-            // @ts-ignore
         [Command.PLAY]: async (url: string) => dispatch(play(url)),
         [Command.TOGGLE_MUTE]: async () => dispatch(toggleMute()),
-        [Command.VOLUME_INC]: async () => {
-            const volume = selectVolume();
-            dispatch(setVolume(volume + 10));
-        },
-        [Command.VOLUME_DEC]: async () => {
-            const volume = selectVolume();
-            dispatch(setVolume(volume - 10));
-        },
+        [Command.VOLUME_INC]: async () => dispatch(setVolume(selectVolume() + 10)),
+        [Command.VOLUME_DEC]: async () => dispatch(setVolume(selectVolume() - 10)),
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,
         [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,
-        [Command.EXIT]: async () => process.exit(0),
+        // TODO: Move to action
+        [Command.EXIT]: async () => {
+            setTimeout(() => process.exit(0), 100)
+        },
         [Command.PLAY_ALBUM_BY_SONG]: () => dispatch(loadAlbumByTrack(selectTrack())),
         [Command.PLAY_POPULAR]: () => dispatch(loadPopularTracksByArtist(selectArtist().id)),
-        [Command.PLAY_ARTIST]: (...artists: string[]) => {
-            return dispatch(loadTracksByArtists(artists));
-        },
+        [Command.PLAY_ARTIST]: (...artists: string[]) => dispatch(loadTracksByArtists(artists)),
     };
 
     const getExecCommand = (command: string): [Command, (...args: any[]) => Promise<void>] => {
