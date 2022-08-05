@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {State} from "stupid-player";
+import {State, StupidPlayer} from "stupid-player";
 import ChromecastAPI from 'chromecast-api';
 
 const promisify = (func) => (...args) => {
@@ -15,6 +15,15 @@ const promisify = (func) => (...args) => {
   });
 };
 
+const hideError = (callback) => (...args) => {
+  return callback(...args);
+  // try {
+  //   return callback(...args);
+  // } catch (e) {
+  //
+  // }
+};
+
 const wrapChromecastDevice = (device: any) => {
   return {
     play: promisify(device.play.bind(device)),
@@ -25,7 +34,7 @@ const wrapChromecastDevice = (device: any) => {
   };
 };
 
-const ChromecastDevice = class {
+const ChromecastDevice = class implements StupidPlayer {
   private wrappedDevice = null;
   private state = State.STOP;
 
@@ -54,38 +63,39 @@ const ChromecastDevice = class {
     return this.wrappedDevice.play(obj);
   }
 
-  // @withCheckDevice
-  play2 = withCheckDevice((obj) => {
-    this.state = State.PLAY;
-    return this.wrappedDevice.play(obj);
-  })
-
   pause() {
-    if (this.wrappedDevice) {
-      this.state = State.PAUSE;
-      return this.wrappedDevice.pause();
+    if (!this.wrappedDevice) {
+      return;
     }
+
+    this.state = State.PAUSE;
+    return this.wrappedDevice.pause();
   }
 
   resume() {
-    if (this.wrappedDevice) {
-      this.state = State.PLAY;
-      return this.wrappedDevice.resume();
+    if (!this.wrappedDevice) {
+      return;
     }
+
+    this.state = State.PLAY;
+    return this.wrappedDevice.resume();
   }
 
   stop() {
-    if (this.wrappedDevice) {
-      this.state = State.STOP;
-      return this.wrappedDevice.stop();
+    if (!this.wrappedDevice) {
+      return;
     }
+
+    this.state = State.STOP;
+    return this.wrappedDevice.stop();
   }
 
   setVolume(volume: number) {
-    if (this.wrappedDevice) {
-      console.log(3421, 'volume', volume)
-      return this.wrappedDevice.setVolume(volume / 100);
+    if (!this.wrappedDevice) {
+      return;
     }
+
+    return this.wrappedDevice.setVolume(volume / 100);
   }
 
   getState() {
@@ -93,7 +103,12 @@ const ChromecastDevice = class {
   }
 
   private onConnect(device: any) {
+    console.log(`connect`, device);
     this.wrappedDevice = wrapChromecastDevice(device);
+    device.on(`status`, (status) => {
+      console.log(11111, status);
+      // this.wrappedDevice = null;
+    });
   }
 };
 
