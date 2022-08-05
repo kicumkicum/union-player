@@ -82,6 +82,19 @@ const CLI = class {
 
         const {ctrl, meta, shift} = key;
 
+        if (ctrl && command === `c`) {
+            // TODO: Remove double code
+            const [type, callback] = this.getExecCommand(`q`);
+            if (callback) {
+                // TODO: Move to render
+                console.log('Command:', type);
+
+                await callback();
+
+                return;
+            }
+        }
+
         if (ctrl || meta || shift) {
             return;
         }

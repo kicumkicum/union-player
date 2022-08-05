@@ -37,13 +37,15 @@ const parseArgs = (): Args => {
 
 const configureProcess = () => {
   process.title = name;
-  process.addListener('SIGTERM', () => {
+  process.on('SIGTERM', () => {
+    process.exit();
+  });
+  process.on('SIGINT', () => {
     process.exit();
   });
 };
 
 configureProcess();
-
 createCore(player, store);
 
 const UIs = (parseArgs()['--ui'] || '').split(',') as (keyof typeof UI)[];
