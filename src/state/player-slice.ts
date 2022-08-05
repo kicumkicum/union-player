@@ -1,7 +1,8 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {CaseReducer, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {State} from 'stupid-player';
-import {playerApi} from '../api/player';
+import {playerApi} from '../api/common-player';
 import {wrapApiByThunk} from './thunk-wrapper';
+import {State as StoreState} from './store';
 
 interface PlayerThunkWrapper {
     play: (uri: string) => {
@@ -16,7 +17,20 @@ interface PlayerThunkWrapper {
     toggleMute: () => boolean;
 }
 
+// @ts-ignore
 const playerApiWrapped = <PlayerThunkWrapper>wrapApiByThunk(playerApi);
+
+const setState: CaseReducer = (state: StoreState['player'], action: PayloadAction<State>): void => {
+    state.state = action.payload;
+};
+
+const setURI: CaseReducer = (state: StoreState['player'], action: PayloadAction<string>): void => {
+    state.uri = action.payload;
+};
+
+const setMute: CaseReducer = (state: StoreState['player'], action: PayloadAction<boolean>): void => {
+    state.isMuted = action.payload;
+};
 
 export const playerSlice = createSlice({
     name: 'player',
@@ -29,14 +43,10 @@ export const playerSlice = createSlice({
     reducers: {},
     extraReducers: {
         // @ts-ignore
-        [playerApiWrapped.togglePause.fulfilled as unknown as string]: (state, action) => {
-            state.state = action.payload;
-        },
+        [playerApiWrapped.togglePause.fulfilled as unknown as string]: setState,
 
         // @ts-ignore
-        [playerApiWrapped.toggleMute.fulfilled as unknown as string]: (state, action) => {
-            state.isMuted = action.payload;
-        },
+        [playerApiWrapped.toggleMute.fulfilled as unknown as string]: setMute,
 
         // @ts-ignore
         [playerApiWrapped.setVolume.fulfilled as unknown as string]: (state, action) => {
@@ -47,17 +57,21 @@ export const playerSlice = createSlice({
         },
 
         // @ts-ignore
-        [playerApiWrapped.stop.fulfilled as unknown as string]: (state, action) => {
-            state.state = action.payload;
-        },
+        [playerApiWrapped.stop.fulfilled as unknown as string]: setState,
 
         // @ts-ignore
         [playerApiWrapped.play.fulfilled as unknown as string]: (state, action) => {
             const {uri, state: playerState} = action.payload;
 
-            state.state = playerState;
-            state.uri = uri;
+            setState(state, {payload: playerState, type: ''});
+            setURI(state, {payload: uri, type: ''});
         },
+
+        // @ts-ignore
+        [playerApiWrapped.play.rejected]: (state, action) => {
+            // TODO: Move to logger and enable/disable
+            console.log('Error:', action);
+        }
     }
 });
 

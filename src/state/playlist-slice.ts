@@ -72,6 +72,11 @@ export const playlistSlice = createSlice({
             const {access_token} = action.payload;
             state.token = access_token;
         },
+        // @ts-ignore
+        [auth.rejected]: (...args) => {
+            console.log('auth error', ...args)
+        },
+
     },
 });
 

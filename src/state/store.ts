@@ -26,7 +26,7 @@ const store = configureStore({
   reducer: {
     player: playerReducer,
     playlist: playlistReducer,
-    player: playerReducer,
+    // playlists: playlistsReducer,
   },
     devTools: true,
     enhancers,
