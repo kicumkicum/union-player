@@ -8,15 +8,23 @@ const createCLI = (store: Store): void => {
     new CLI(store);
 };
 
+const print = (...args: string[]) => {
+    console.log(...args);
+};
+
+const log = (...args: any[]) => {
+    console.log(`LOG:`, ...args);
+};
+
 const render = (state: State) => {
     // useEffect(() => {
-    //     console.log('Last command: ', state.player.lastCommand)
+    //     print('Last command: ', state.player.lastCommand)
     // }, [state.player.lastCommand], 4);
 
     useEffect(() => {
         const {track} = state.playlist.activeTrack;
 
-        console.log(`Play: ${track.artists[0].name} - ${track.title} :: ${track.albums[0].title}`)
+        print(`Play: ${track.artists[0].name} - ${track.title} :: ${track.albums[0].title}`)
     }, [state.playlist.activeTrack], 'cli.show_playing_track');
 };
 
@@ -56,9 +64,9 @@ const CLI = class {
           .split(' ');
 
         // TODO: Move to render and to debug
-        console.log('line:', line)
-        console.log('command:', command)
-        console.log('value:', value)
+        log('line:', line)
+        log('command:', command)
+        log('value:', value)
 
         const [type, callback] = this.getExecCommand(command);
 
@@ -67,7 +75,7 @@ const CLI = class {
             process.stdout.moveCursor(-1, 0);
 
             // TODO: Move to render
-            console.log('Command:', type, callback());
+            print('Command:', type);
 
             await callback(...value);
         }
@@ -87,7 +95,7 @@ const CLI = class {
             const [type, callback] = this.getExecCommand(`q`);
             if (callback) {
                 // TODO: Move to render
-                console.log('Command:', type);
+                print('Command:', type);
 
                 await callback();
 
@@ -119,7 +127,7 @@ const CLI = class {
 
         if (callback) {
             // TODO: Move to render
-            console.log('Command:', type);
+            print('Command:', type);
 
             await callback();
 
@@ -127,7 +135,7 @@ const CLI = class {
         }
 
         // TODO: Move to render
-        console.log('Unhandle key:', command);
+        print('Unhandled key:', command);
     }
 
     private handleLine() {
