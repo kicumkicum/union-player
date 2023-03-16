@@ -16,18 +16,20 @@
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "1.5.1",
+    "@types/ws": "8.5.4",
     "chromecast-api": "0.3.4",
+    "express": "4.18.2",
     "range-stream": "1.1.0",
     "readable-stream-clone": "0.0.7",
     "remote-redux-devtools": "^0.5.16",
     "stdio": "2.1.1",
     "stupid-player": "0.4.2",
     "telegraf": "4.4.2",
+    "ws": "8.13.0",
     "ym-api": "1.2.1"
   },
   "devDependencies": {
     "@types/node": "14.14.36",
-    "remotedev-server": "^0.3.1",
     "typescript": "4.2.3"
   }
 }
