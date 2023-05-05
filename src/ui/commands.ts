@@ -23,6 +23,7 @@ export enum Command {
     VOLUME_INC = 'volume-inc',
     VOLUME_DEC = 'volume-dec',
     SEARCH = 'search',
+    HELP = 'help',
 }
 
 const CommandAlias: Record<Command, string[]> = {
@@ -42,6 +43,7 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.ADD_CHROMECAST_UI]: ['c'],
     [Command.VOLUME_DEC]: ['volume-down', 'down'],
     [Command.SEARCH]: ['search', 's'],
+    [Command.HELP]: ['help', 'h'],
 };
 
 export const createCommands = (dispatch: any, store: Store) => {
@@ -65,6 +67,15 @@ export const createCommands = (dispatch: any, store: Store) => {
         [Command.PLAY_ALBUM_BY_SONG]: () => dispatch(loadAlbumByTrack(selectTrack())),
         [Command.PLAY_POPULAR]: () => dispatch(loadPopularTracksByArtist(selectArtist().id)),
         [Command.PLAY_ARTIST]: (...artists: string[]) => dispatch(loadTracksByArtists(artists)),
+        [Command.HELP]: async () => {
+            // TODO Move implementation to more suitable module. Use it redux-action may be
+            console.log(
+              Object.keys(CommandAlias).map((commandName) => {
+                const bar = CommandAlias[commandName as Command];
+                return `${commandName}: ${(bar).join(`, `)}`
+              })
+            );
+        },
     };
 
     const getExecCommand = (command: string): [Command, (...args: any[]) => Promise<void>] => {
