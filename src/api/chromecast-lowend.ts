@@ -34,14 +34,39 @@ const wrapChromecastDevice = (device: any) => {
   };
 };
 
+const Deferred = class {
+  private readonly _promise: Promise = null;
+  private _resolve: () => void = null;
+  private _reject: () => void = null;
+
+  constructor() {
+    this._promise = new Promise((resolve, reject) => {
+      this._resolve = resolve;
+      this._reject = reject;
+    });
+  }
+
+  resolve(val) {
+    this._resolve(val);
+  }
+
+  reject(val) {
+    this._reject(val);
+  }
+
+  promise() {
+    return this._promise;
+  }
+};
+
 const ChromecastDevice = class implements StupidPlayer {
   private wrappedDevice = null;
   private state = State.STOP;
+  private inited = false;
+  private initDeferred = new Deferred();
 
   constructor() {
-    const client = new ChromecastAPI();
-
-    client.on('device', this.onConnect.bind(this));
+    this.inited = false;
   }
 
   withCheckDevice(callback) {
@@ -54,7 +79,12 @@ const ChromecastDevice = class implements StupidPlayer {
     }
   }
 
-  play(obj) {
+  async play(obj) {
+    console.trace(`chromecast play`)
+    if (!this._inited) {
+      await this._init();
+    }
+
     if (!this.wrappedDevice) {
       return;
     }
@@ -106,9 +136,16 @@ const ChromecastDevice = class implements StupidPlayer {
     console.log(`connect`, device);
     this.wrappedDevice = wrapChromecastDevice(device);
     device.on(`status`, (status) => {
-      console.log(11111, status);
+      this.initDeferred.resolve();
       // this.wrappedDevice = null;
     });
+  }
+
+  async _init() {
+    const client = new ChromecastAPI();
+    client.on('device', this.onConnect.bind(this));
+
+    return this.initDeferred.promise();
   }
 };
 
