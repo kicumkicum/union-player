@@ -66,7 +66,7 @@ export const createCommands = (dispatch: any, store: Store) => {
         },
         [Command.PLAY_ALBUM_BY_SONG]: () => dispatch(loadAlbumByTrack(selectTrack())),
         [Command.PLAY_POPULAR]: () => dispatch(loadPopularTracksByArtist(selectArtist().id)),
-        [Command.PLAY_ARTIST]: (...artists: string[]) => dispatch(loadTracksByArtists(artists)),
+        [Command.PLAY_ARTIST]: (...words: string[]) => dispatch(loadTracksByArtists([words.join(` `)])),
         [Command.HELP]: async () => {
             // TODO Move implementation to more suitable module. Use it redux-action may be
             console.log(
