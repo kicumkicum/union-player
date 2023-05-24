@@ -80,7 +80,6 @@ const ChromecastDevice = class implements StupidPlayer {
   }
 
   async play(obj) {
-    console.trace(`chromecast play`)
     if (!this._inited) {
       await this._init();
     }
