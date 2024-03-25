@@ -59,6 +59,11 @@ const CLI = class {
 
     private async onReadLine(line: string): Promise<void> {
         const [command, ...value] = line
+          // Workaround for play-url
+          .replace(`https:`, ``)
+          // Workaround for play-url
+          .replace(`http:`, ``)
+          // Workaround for readline
           .replace(/.*:/, ':')
           .substr(1)
           .split(' ');

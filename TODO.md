@@ -5,6 +5,7 @@
 - [x] Add control by telegram
 - [ ] Add playing from google music
 - [ ] Add playing from bittorrent
+- [x] Add playing by url from yandex music. Like https://music.yandex.ru/album/19283280/track/94822817?utm_medium=copy_link
 
 ## Roadmap
 

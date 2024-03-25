@@ -1,5 +1,13 @@
 import {togglePause, play, toggleMute, setVolume} from '../state/player-slice';
-import {setActiveNext, setActivePrev, loadPopularTracksByArtist, loadAlbumByTrack, loadTracksByArtists, search} from '../state/playlist-slice';
+import {
+    setActiveNext,
+    setActivePrev,
+    loadPopularTracksByArtist,
+    loadAlbumByTrack,
+    loadTracksByArtists,
+    search,
+    loadTrackUrl
+} from '../state/playlist-slice';
 import {selectVolume} from '../state/player-selectors';
 import config from '../../config';
 import {selectArtist, selectTrack} from "../state/playlist-selectors";
@@ -24,6 +32,7 @@ export enum Command {
     VOLUME_DEC = 'volume-dec',
     SEARCH = 'search',
     HELP = 'help',
+    PLAY_URL = 'play-url',
 }
 
 const CommandAlias: Record<Command, string[]> = {
@@ -44,6 +53,7 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.VOLUME_DEC]: ['volume-down', 'down'],
     [Command.SEARCH]: ['search', 's'],
     [Command.HELP]: ['help', 'h'],
+    [Command.PLAY_URL]: ['play-url', 'u'],
 };
 
 export const createCommands = (dispatch: any, store: Store) => {
@@ -75,6 +85,11 @@ export const createCommands = (dispatch: any, store: Store) => {
                 return `${commandName}: ${(bar).join(`, `)}`
               })
             );
+        },
+        [Command.PLAY_URL]: async (url: string) => {
+            const id = url.split(`/`).reverse()[0];
+            // @ts-ignore
+            dispatch(loadTrackUrl({id}));
         },
     };
 
