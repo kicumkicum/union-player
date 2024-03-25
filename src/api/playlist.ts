@@ -68,9 +68,10 @@ const search = async (query: string) => {
 };
 
 const auth = async () => {
-    const {token} = config;
+    const {token, login, password} = config;
 
-    return await ymApi.init({uid: 11111111, access_token: token});
+  // return await ymApi.init({uid: 11111111, username: login, password});
+  return await ymApi.init({uid: 11111111, access_token: token});
 };
 
 const loadTracksByAlbum = async (album: Album) => {

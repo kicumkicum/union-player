@@ -6,7 +6,7 @@ import {IPlayer} from "./i-player";
 let activePlayer = nativePlayer;
 
 const players = [
-  chromecastPlayer,
+  // chromecastPlayer,
   nativePlayer,
 ];
 

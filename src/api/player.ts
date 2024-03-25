@@ -3,6 +3,10 @@ import {State as AppState} from "../state/store";
 import {player} from "../singletone";
 import {IPlayer} from "./i-player";
 
+player.on(`error`, (err) => {
+  console.log(`Catch error!!!`, err);
+});
+
 const play = async (uri: string, thunkApi: any) => {
   await player.play(await StupidPlayer.getReadStream(uri));
 

@@ -1,8 +1,10 @@
 # Union Player
 
+Консольный аудиоплеер для прослушивания ЯндексМузыки. Написан на node.js и TypeScript.
+
 ## Build
 
-See build info in stupid-player [repo](https://github.com/kicumkicum/stupid-player/#building).
+В stupid-player [repo](https://github.com/kicumkicum/stupid-player/#building).
 
 ## Configure keyboard layouts for hot keys
 
