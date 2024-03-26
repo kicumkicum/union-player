@@ -13,7 +13,12 @@ const selectTrack = (): Track => {
   return selectPlaylistStore().activeTrack.track;
 };
 
+const selectTracks = (): Track[] => {
+  return selectPlaylistStore().tracks.map((it) => it.track);
+};
+
 export {
   selectArtist,
   selectTrack,
+  selectTracks,
 };

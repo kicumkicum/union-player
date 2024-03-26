@@ -10,9 +10,10 @@ import {
 } from '../state/playlist-slice';
 import {selectVolume} from '../state/player-selectors';
 import config from '../../config';
-import {selectArtist, selectTrack} from "../state/playlist-selectors";
+import {selectArtist, selectTrack, selectTracks} from "../state/playlist-selectors";
 import {createChromecast} from "./chromecast/chromecast";
 import {Store} from "../state/store";
+import {formatTrack} from "./cli/utils";
 
 export enum Command {
     PLAY = 'play',
@@ -22,7 +23,7 @@ export enum Command {
     NEXT_TRACK = 'next-track',
     PREV_TRACK = 'prev-track',
     SELECT_PLAYLIST = 'select-playlist',
-    SHOW_PLAYLISTS = 'show-playlists',
+    SHOW_PLAYLIST = 'show-playlist',
     PLAY_ALBUM_BY_SONG = 'play-album-by-song',
     EXIT = 'exit',
     PLAY_POPULAR = 'play-popular-by-artist',
@@ -42,7 +43,7 @@ const CommandAlias: Record<Command, string[]> = {
     [Command.PLAY]: ['play'],
     [Command.PREV_TRACK]: ['r', 'prev'],
     [Command.TOGGLE_MUTE]: ['m', 'mute', 'unmute', 'toggle-mute'],
-    [Command.SHOW_PLAYLISTS]: [],
+    [Command.SHOW_PLAYLIST]: ['show-playlist', `sp`],
     [Command.PLAY_ALBUM_BY_SONG]: ['a'],
     [Command.SELECT_PLAYLIST]: [],
     [Command.EXIT]: ['q', 'exit', 'quit'],
@@ -69,7 +70,11 @@ export const createCommands = (dispatch: any, store: Store) => {
         [Command.VOLUME_INC]: async () => dispatch(setVolume(selectVolume() + 10)),
         [Command.VOLUME_DEC]: async () => dispatch(setVolume(selectVolume() - 10)),
         [Command.SELECT_PLAYLIST]: async (): Promise<null> => null,
-        [Command.SHOW_PLAYLISTS]: async (): Promise<null> => null,
+        [Command.SHOW_PLAYLIST]: async (): Promise<void> => {
+            // TODO: Это должно как-то попасть в UI, например в CLI. Но не очень понятно, как это сделать
+            const tracks = selectTracks();
+            console.log(tracks.map((track, i) => `${i + 1}. ${formatTrack(track)}`).join(`\n`));
+        },
         // TODO: Move to action
         [Command.EXIT]: async () => {
             setTimeout(() => process.exit(0), 100)

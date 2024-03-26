@@ -3,6 +3,7 @@ import {State, Store} from '../../state/store';
 import {Interface} from 'readline';
 import {Command, createCommands} from '../commands';
 import {useEffect} from '../../utils/not-react';
+import {formatTrack} from "./utils";
 
 const createCLI = (store: Store): void => {
     new CLI(store);
@@ -24,7 +25,7 @@ const render = (state: State) => {
     useEffect(() => {
         const {track} = state.playlist.activeTrack;
 
-        print(`Play: ${track.artists[0].name} - ${track.title} :: ${track.albums[0].title}`)
+        print(`Play: ${formatTrack(track)}`)
     }, [state.playlist.activeTrack], 'cli.show_playing_track');
 };
 
