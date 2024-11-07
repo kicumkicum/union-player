@@ -10,6 +10,7 @@ const createCLI = (store: Store): void => {
 };
 
 const print = (...args: string[]) => {
+    process.stdout.moveCursor(-10, 0);
     console.log(...args);
 };
 
@@ -40,6 +41,8 @@ const CLI = class {
             input: process.stdin,
             output: process.stdout,
           });
+        // @ts-ignore
+        this.rl._writeToOutput = () => {};
 
         this.getExecCommand = createCommands(store.dispatch, store);
 
