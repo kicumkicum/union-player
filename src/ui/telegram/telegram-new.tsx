@@ -128,7 +128,6 @@ const App = ({store}) => {
 
 // @ts-ignore
 const createTeleJsx = (store) => {
-  console.log(1111111, `telegram bot has started`);
   render(
     <Root bot={urbanBotTelegram} port={3001} isNewMessageEveryRender={false} initialChats={[{
       id: `555209582`,
@@ -147,7 +146,7 @@ const createTeleJsx = (store) => {
       </Provider>
 
     </Root>,
-    () => console.log(`telegram bot has started`),
+    () => {},
   );
 };
 
