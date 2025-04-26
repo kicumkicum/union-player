@@ -21,4 +21,5 @@ export {
   selectArtist,
   selectTrack,
   selectTracks,
+  selectPlaylistStore,
 };

@@ -9,6 +9,7 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "resolveJsonModule": true,
+    "jsx": "react",
   },
   "lib": ["es2015"],
   "exclude": ["src/ui/web-app", "src/__prototypes__"]

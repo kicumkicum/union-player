@@ -3,13 +3,12 @@ import {createCore} from './src/core';
 import store from './src/state/store';
 import {player} from './src/singletone';
 import {createChromecast} from './src/ui/chromecast/chromecast';
-import {createTelegram} from './src/ui/telegram/telegram';
 import {name} from './package.json';
 import {createWeb} from './src/ui/web/web';
-
+import {createTeleJsx} from './src/ui/telegram/telegram-new'
 const UI = {
   'chromecast': createChromecast,
-  'telegram': createTelegram,
+  'telegram': createTeleJsx,
   'web': createWeb,
   'cli': createCLI,
 };

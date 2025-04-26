@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node dist/index.js",
+    "start": "tsx index.ts",
     "start.redux.dev": "remotedev --hostname=localhost --port=8080"
   },
   "keywords": [],
@@ -17,9 +17,13 @@
   "dependencies": {
     "@reduxjs/toolkit": "1.5.1",
     "@types/ws": "8.5.4",
+    "@urban-bot/core": "1.0.1",
+    "@urban-bot/telegram": "1.0.1",
     "chromecast-api": "0.3.4",
     "express": "4.18.2",
     "range-stream": "1.1.0",
+    "react": "18.2.0",
+    "react-redux": "8.0.5",
     "readable-stream-clone": "0.0.7",
     "remote-redux-devtools": "^0.5.16",
     "stdio": "2.1.1",
@@ -29,7 +33,10 @@
     "ym-api": "1.2.1"
   },
   "devDependencies": {
+    "@types/express": "4.17.17",
     "@types/node": "14.14.36",
-    "typescript": "4.2.3"
+    "@types/react": "18.0.28",
+    "tsx": "4.19.3",
+    "typescript": "5.8.3"
   }
 }

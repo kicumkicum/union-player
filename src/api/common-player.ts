@@ -10,7 +10,7 @@ const players = [
   nativePlayer,
 ];
 
-const createCommonPlayer = (players: IPlayer[]): !IPlayer => {
+const createCommonPlayer = (players: IPlayer[]): IPlayer => {
   return Object.keys(players[0]).reduce((acc, cur): IPlayer => {
     return {
       ...acc,
